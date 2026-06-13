@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<!--
+  Musonius homepage — Prototype C ("Liana Welcome, literal")
+  Built Session 66 (2026-05-23) from STYLE_GUIDE.md + Scott's confirmed copy calls.
+  Open this file directly in a browser — no build step required.
+
+  Decisions baked in (Session 66 confirms):
+    Q1 (a) — three-line lede about sovereignty + choice + structural-not-trust
+    Q2 (a) — no "vault" in body copy; lockup tag carries the vocabulary
+    Q3 (a) — two buttons: "Open the app" + "How it works"
+    Q4 (a) — nothing below the fold; one viewport, no scroll
+
+  Identity tokens sourced from MUSONIUS_IDENTITY.md and frontend/tailwind.config.ts.
+  Type scale + spacing from docs/website_copy/STYLE_GUIDE.md.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Musonius Multisig Vault</title>
+  <meta name="description" content="A Bitcoin vault for self-custody and inheritance. You hold your bitcoin. You choose who holds the keys with you. The structure lives on the blockchain, not in trust.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- Tokens (sourced from MUSONIUS_IDENTITY.md + tailwind.config.ts) ---------- */
+    :root {
+      --paper:        #F4EFE6;
+      --paper-deep:   #ECE5D8;
+      --ink:          #1A1714;
+      --ink-soft:     #4A443D;
+      --ink-mute:     #8A8276;
+      --rule:         #D9D1C0;
+      --oxblood:      #6B1F1A;
+      --oxblood-deep: #4A1612;
+      --font-serif:   'Cormorant Garamond', Georgia, serif;
+      --font-sans:    'Inter', system-ui, sans-serif;
+    }
+
+    /* ---------- Reset ---------- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+
+    /* ---------- Page ---------- */
+    body {
+      font-family: var(--font-sans);
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* ---------- Lockup (top-left, per identity § 5) ---------- */
+    header {
+      padding: 32px 48px;
+      display: flex;
+      justify-content: flex-start;
+    }
+    .lockup {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .lockup-mark {
+      height: 26px;
+      width: auto;
+      flex-shrink: 0;
+    }
+    .lockup-wordmark {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 32px;
+      letter-spacing: -0.012em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .lockup-rule {
+      width: 1px;
+      height: 18px;
+      background: var(--rule);
+      margin: 0 6px;
+      align-self: center;
+    }
+    .lockup-tag {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--ink-mute);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ---------- Main ---------- */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 24px 48px;
+      text-align: center;
+    }
+
+    .welcome {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 84px;
+      letter-spacing: -0.018em;
+      line-height: 1.05;
+      color: var(--ink);
+      margin-bottom: 56px;
+    }
+
+    .lede {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 22px;
+      line-height: 1.55;
+      max-width: 640px;
+      margin-bottom: 64px;
+    }
+    .lede p {
+      color: var(--ink-soft);
+      margin: 0;
+    }
+    .lede p + p { margin-top: 4px; }
+    .lede p:last-child { color: var(--ink); }
+
+    /* ---------- Buttons ---------- */
+    .choices {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    /* Button UX: oxblood is the intention/action color — never the resting state.
+       Rest = ink-outlined ghost. Hover = oxblood fill (intent declared).
+       Active = oxblood-deep + 1px nudge (action committed). */
+    .btn {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 18px;
+      padding: 16px 32px;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--ink);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition:
+        background-color 140ms ease,
+        color 140ms ease,
+        border-color 140ms ease,
+        transform 80ms ease;
+      min-width: 180px;
+      text-align: center;
+    }
+    .btn:hover,
+    .btn:focus-visible {
+      background: var(--oxblood);
+      color: var(--paper);
+      border-color: var(--oxblood);
+      outline: none;
+    }
+    .btn:active {
+      background: var(--oxblood-deep);
+      border-color: var(--oxblood-deep);
+      transform: translateY(1px);
+    }
+
+    /* ---------- Footer ---------- */
+    footer {
+      padding: 32px 48px 40px;
+      text-align: center;
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--ink-mute);
+      letter-spacing: 0.01em;
+    }
+    footer a {
+      color: var(--ink-mute);
+      text-decoration: none;
+      transition: color 140ms ease;
+    }
+    footer a:hover,
+    footer a:focus-visible {
+      color: var(--oxblood);
+      outline: none;
+    }
+    .footer-dot {
+      color: var(--rule);
+      margin: 0 10px;
+      display: inline-block;
+    }
+
+    /* ---------- Mobile ---------- */
+    @media (max-width: 720px) {
+      header { padding: 24px; }
+      main { padding: 16px 24px; }
+      .welcome { font-size: 56px; margin-bottom: 40px; }
+      .lede { font-size: 19px; margin-bottom: 48px; max-width: 100%; }
+      .lockup-wordmark { font-size: 24px; }
+      .lockup-mark { height: 20px; }
+      .lockup-rule { height: 14px; margin: 0 4px; }
+      .lockup-tag { font-size: 10px; letter-spacing: 0.18em; }
+      .btn { font-size: 16px; padding: 14px 24px; min-width: 0; flex: 1 1 140px; }
+      footer { padding: 24px 24px 32px; font-size: 13px; }
+    }
+
+    @media (max-width: 380px) {
+      .lockup-tag { display: none; }
+      .lockup-rule { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a class="lockup" href="/" aria-label="Musonius Multisig Vault — home">
+      <svg class="lockup-mark" viewBox="0 0 52 46" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <rect x="0" y="2" width="52" height="11" fill="currentColor"/>
+        <rect x="9" y="13" width="6" height="33" fill="currentColor"/>
+        <rect x="37" y="13" width="6" height="33" fill="currentColor"/>
+      </svg>
+      <span class="lockup-wordmark">Musonius</span>
+      <span class="lockup-rule" aria-hidden="true"></span>
+      <span class="lockup-tag">Multisig Vault</span>
+    </a>
+  </header>
+
+  <main>
+    <h1 class="welcome">Welcome.</h1>
+
+    <div class="lede">
+      <p>You hold your bitcoin.</p>
+      <p>You choose who holds the keys with you.</p>
+      <p>Trust in math. Not in people.</p>
+    </div>
+
+    <div class="choices">
+      <a class="btn" href="https://app.musonius.io">Open the app</a>
+      <a class="btn" href="how_it_works.html">How it works</a>
+    </div>
+  </main>
+
+  <footer>
+    <span>Open source</span><span class="footer-dot" aria-hidden="true">·</span><a href="origin.html">The origin</a><span class="footer-dot" aria-hidden="true">·</span><span>Built by Scott Porter</span>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<!--
+  Musonius /how-it-works — Prototype (Session 66)
+  Built from Scott's confirmed leans on Q1-Q5:
+    Q1 (b) — Bitcoin-literate audience; "multisig", "descriptor", "timelock" assumed
+    Q2 (a) — Honest-limits section included (the honesty IS the differentiation)
+    Q3 (a) — Diagram placeholder; real diagram is a separate commissioned work
+    Q4 (a) — Closing CTAs: Open the app + Read the security paper
+    Q5 (a) — Same shell as homepage (lockup, footer, ghost buttons w/ oxblood-on-hover)
+  Structure: Shape A (tight, 4 sections).
+  Source material: docs/HOW_IT_WORKS.md (full reference) + DEC-022 (non-association) + DEC-030 (three-path).
+  Per Scott's instruction: no enumeration of the current three shapes; describe the model abstractly.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>How Musonius works — Musonius Multisig Vault</title>
+  <meta name="description" content="Musonius coordinates a Bitcoin multisig vault between you and the people you choose. Your keys live on your own hardware. The math holds the rules.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- Tokens ---------- */
+    :root {
+      --paper:        #F4EFE6;
+      --paper-deep:   #ECE5D8;
+      --ink:          #1A1714;
+      --ink-soft:     #4A443D;
+      --ink-mute:     #8A8276;
+      --rule:         #D9D1C0;
+      --oxblood:      #6B1F1A;
+      --oxblood-deep: #4A1612;
+      --font-serif:   'Cormorant Garamond', Georgia, serif;
+      --font-sans:    'Inter', system-ui, sans-serif;
+    }
+
+    /* ---------- Reset ---------- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+    /* ---------- Page ---------- */
+    body {
+      font-family: var(--font-sans);
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* ---------- Lockup ---------- */
+    header {
+      padding: 32px 48px;
+      display: flex;
+      justify-content: flex-start;
+    }
+    .lockup {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .lockup-mark { height: 26px; width: auto; flex-shrink: 0; }
+    .lockup-wordmark {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 32px;
+      letter-spacing: -0.012em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .lockup-rule {
+      width: 1px; height: 18px;
+      background: var(--rule);
+      margin: 0 6px;
+      align-self: center;
+    }
+    .lockup-tag {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--ink-mute);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ---------- Main ---------- */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 48px 96px;
+    }
+
+    .content {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    /* ---------- Page heading ---------- */
+    h1.page-title {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 56px;
+      letter-spacing: -0.018em;
+      line-height: 1.10;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+
+    p.lede {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 22px;
+      line-height: 1.50;
+      color: var(--ink-soft);
+      margin-bottom: 128px;
+    }
+
+    /* ---------- Section ---------- */
+    section {
+      margin-bottom: 96px;
+    }
+    section:last-of-type { margin-bottom: 96px; }
+
+    section h2 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 40px;
+      letter-spacing: -0.012em;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 32px;
+    }
+
+    section p {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+    section p.secondary {
+      color: var(--ink-soft);
+    }
+    section p:last-child {
+      margin-bottom: 0;
+    }
+
+    section strong {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    /* ---------- Diagram placeholder ---------- */
+    .diagram-placeholder {
+      width: 100%;
+      max-width: 600px;
+      height: 400px;
+      margin: 48px auto;
+      border: 1px dashed var(--rule);
+      background: var(--paper-deep);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      text-align: center;
+    }
+    .diagram-placeholder .label {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      margin-bottom: 16px;
+    }
+    .diagram-placeholder .desc {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 20px;
+      color: var(--ink-soft);
+      line-height: 1.4;
+      max-width: 360px;
+    }
+
+    /* ---------- CTAs ---------- */
+    .closing {
+      margin-top: 96px;
+      padding-top: 64px;
+      border-top: 1px solid var(--rule);
+      text-align: center;
+    }
+    .closing p {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 24px;
+      color: var(--ink-soft);
+      margin-bottom: 40px;
+      line-height: 1.4;
+    }
+    .choices {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 18px;
+      padding: 16px 32px;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--ink);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition:
+        background-color 140ms ease,
+        color 140ms ease,
+        border-color 140ms ease,
+        transform 80ms ease;
+      min-width: 180px;
+      text-align: center;
+    }
+    .btn:hover,
+    .btn:focus-visible {
+      background: var(--oxblood);
+      color: var(--paper);
+      border-color: var(--oxblood);
+      outline: none;
+    }
+    .btn:active {
+      background: var(--oxblood-deep);
+      border-color: var(--oxblood-deep);
+      transform: translateY(1px);
+    }
+
+    /* ---------- Footer ---------- */
+    footer {
+      padding: 32px 48px 40px;
+      text-align: center;
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--ink-mute);
+      letter-spacing: 0.01em;
+    }
+    footer a {
+      color: var(--ink-mute);
+      text-decoration: none;
+      transition: color 140ms ease;
+    }
+    footer a:hover,
+    footer a:focus-visible {
+      color: var(--oxblood);
+      outline: none;
+    }
+    .footer-dot {
+      color: var(--rule);
+      margin: 0 10px;
+      display: inline-block;
+    }
+
+    /* ---------- Mobile ---------- */
+    @media (max-width: 720px) {
+      header { padding: 24px; }
+      main { padding: 24px 24px 64px; }
+      h1.page-title { font-size: 40px; margin-bottom: 20px; }
+      p.lede { font-size: 19px; margin-bottom: 80px; }
+      section { margin-bottom: 80px; }
+      section h2 { font-size: 32px; margin-bottom: 24px; }
+      section p { font-size: 17px; line-height: 1.6; }
+      .diagram-placeholder { height: 320px; margin: 32px auto; padding: 24px; }
+      .diagram-placeholder .desc { font-size: 17px; }
+      .closing { margin-top: 64px; padding-top: 48px; }
+      .closing p { font-size: 20px; margin-bottom: 32px; }
+      .lockup-wordmark { font-size: 24px; }
+      .lockup-mark { height: 20px; }
+      .lockup-rule { height: 14px; margin: 0 4px; }
+      .lockup-tag { font-size: 10px; letter-spacing: 0.18em; }
+      .btn { font-size: 16px; padding: 14px 24px; min-width: 0; flex: 1 1 140px; }
+      footer { padding: 24px 24px 32px; font-size: 13px; }
+    }
+
+    @media (max-width: 380px) {
+      .lockup-tag { display: none; }
+      .lockup-rule { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a class="lockup" href="index.html" aria-label="Musonius Multisig Vault — home">
+      <svg class="lockup-mark" viewBox="0 0 52 46" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <rect x="0" y="2" width="52" height="11" fill="currentColor"/>
+        <rect x="9" y="13" width="6" height="33" fill="currentColor"/>
+        <rect x="37" y="13" width="6" height="33" fill="currentColor"/>
+      </svg>
+      <span class="lockup-wordmark">Musonius</span>
+      <span class="lockup-rule" aria-hidden="true"></span>
+      <span class="lockup-tag">Multisig Vault</span>
+    </a>
+  </header>
+
+  <main>
+    <article class="content">
+
+      <h1 class="page-title">How Musonius works</h1>
+
+      <p class="lede">
+        A Bitcoin security solution. Sovereign by design. Built to outlast you.
+      </p>
+
+      <section>
+        <h2>Why this exists.</h2>
+        <p>Self-custody matters to you. Not your keys, not your coins.</p>
+        <p>But self-custody alone is hard. A lost device. A forgotten location. A bad year. The setups that look like multi-key safety on paper are often a single point of failure in practice.</p>
+        <p>So you have looked at collaborative security. A professional alongside you. A multi-key arrangement designed to survive what solo cannot. It is a real improvement.</p>
+        <p>But it ends in the same place every time. Trust. Trust that the provider — even the most honest one, running rigorous procedures — will not collude. Trust that their policies hold under court orders, ownership changes, regulatory shifts, employee turnover. Trust that the company you signed up with is the same company in ten years.</p>
+        <p>That is the gap Musonius is built to close.</p>
+      </section>
+
+      <section>
+        <h2>How Musonius answers it.</h2>
+
+        <p>Musonius is built around one rule: while you are able to act, every transaction in your vault requires your signature. No override. No &ldquo;we&rsquo;ll sign on your authorization.&rdquo; Your hardware device, your physical presence, every time.</p>
+
+        <p>The rule holds because the math is built to enforce it. Musonius the platform holds no keys — it cannot sign for anything in your vault, ever. There is no platform key to compromise, no override to subvert, no employee discipline that needs to hold. This is not policy — it is the structural absence of the thing that would make policy necessary.</p>
+
+        <p>The vault&rsquo;s rules, written into the Bitcoin blockchain when the vault is created, require your key for the everyday path and for the short-cooldown recovery path. Two of your other keyholders cannot move funds while you are present and able to act. This is not a promise — it is the script.</p>
+
+        <div class="diagram-placeholder" role="img" aria-label="Diagram of the vault structure — placeholder">
+          <span class="label">Diagram — to be commissioned</span>
+          <span class="desc">The structure of the vault: the three paths funds can move, and the failsafe timing for the failure modes.</span>
+        </div>
+
+        <p>The rule holds until you cannot act. If you lose your key, become incapacitated, or are no longer here, a third path opens after a long failsafe of inactivity — usually six to twelve months. Recovery requires two of your three keyholders, neither of whom is the platform. The long delay gives legitimate parties time to coordinate and gives any wrongful attempt time to be noticed. The structural independence of the keyholders — who, by design, are not related to one another — makes wrongful coordination logistically hard.</p>
+
+        <p class="secondary">Each key lives on its holder&rsquo;s own hardware signing device. The Sovereignty Backup Kit, generated at vault setup, lets you recover from your own vault using software we did not write. If Musonius is gone tomorrow, your vault still works. None of these mechanisms depend on us.</p>
+      </section>
+
+      <section>
+        <h2>The honest part.</h2>
+        <p>There are no perfect custody designs. Every architecture is a trade-off between sovereignty, convenience, recoverability, and resilience against attack. The honest engineers acknowledge this; the providers selling certainty do not.</p>
+        <p>Musonius cannot save you from every possible compound failure. If all three of your keys are lost at the same time, nothing survives. If both of your non-owner keyholders coordinate against you for the full failsafe period — without you noticing, without you able to act — they can recover the funds. The friction is long, the structural independence makes it hard, but the math does not strictly prevent it. We will not tell you it does.</p>
+        <p>What Musonius gives you is a vault where the math handles what math can handle, where the friction in the failure modes is built around independence and time, and where no party — including us — has the structural ability to collude with anyone.</p>
+        <p>We don't pretend otherwise. We just designed the trade-offs honestly.</p>
+      </section>
+
+      <div class="closing">
+        <p>Trust in math. Not in people.</p>
+        <div class="choices">
+          <a class="btn" href="https://app.musonius.io">Open the app</a>
+          <a class="btn" href="technical_stuff.html">Read the technical details</a>
+        </div>
+      </div>
+
+    </article>
+  </main>
+
+  <footer>
+    <span>Open source</span><span class="footer-dot" aria-hidden="true">·</span><a href="origin.html">The origin</a><span class="footer-dot" aria-hidden="true">·</span><span>Built by Scott Porter</span>
+  </footer>
+
+</body>
+</html>

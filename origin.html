@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<!--
+  Musonius /origin — Prototype (Session 67 non-dev)
+  Built from Scott's confirmed leans on Q5-Q7:
+    Q5 (a) — Route /origin. File origin.html. Frames as the story it is.
+    Q6 (a) — Restructure NAMING.md for visitor flow:
+              1) Who Musonius was   2) Why the name fits   3) Why "vault" not "wallet"
+              Drop the internal-name (TBA Vault) section entirely.
+    Q7 (a) — Footer link alongside future /contact. No top-nav.
+  Voice discipline carried from Session 67 /technical revision pass:
+    no em-dashes, active voice, "we" allowed, plain-language register,
+    smart non-technical reader as the audience.
+  Source material: docs/NAMING.md (Session 20 lock), DEC-038 (public name), DEC-044 (vault vs wallet).
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>The origin. Musonius Multisig Vault</title>
+  <meta name="description" content="The origin of the name Musonius. The Roman Stoic philosopher Gaius Musonius Rufus, his teaching lineage, and why we chose vault over wallet.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- Tokens ---------- */
+    :root {
+      --paper:        #F4EFE6;
+      --paper-deep:   #ECE5D8;
+      --ink:          #1A1714;
+      --ink-soft:     #4A443D;
+      --ink-mute:     #8A8276;
+      --rule:         #D9D1C0;
+      --oxblood:      #6B1F1A;
+      --oxblood-deep: #4A1612;
+      --font-serif:   'Cormorant Garamond', Georgia, serif;
+      --font-sans:    'Inter', system-ui, sans-serif;
+    }
+
+    /* ---------- Reset ---------- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+    /* ---------- Page ---------- */
+    body {
+      font-family: var(--font-sans);
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* ---------- Lockup ---------- */
+    header {
+      padding: 32px 48px;
+      display: flex;
+      justify-content: flex-start;
+    }
+    .lockup {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .lockup-mark { height: 26px; width: auto; flex-shrink: 0; }
+    .lockup-wordmark {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 32px;
+      letter-spacing: -0.012em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .lockup-rule {
+      width: 1px; height: 18px;
+      background: var(--rule);
+      margin: 0 6px;
+      align-self: center;
+    }
+    .lockup-tag {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--ink-mute);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ---------- Main ---------- */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 48px 96px;
+    }
+
+    .content {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    /* ---------- Page heading ---------- */
+    h1.page-title {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 56px;
+      letter-spacing: -0.018em;
+      line-height: 1.10;
+      color: var(--ink);
+      margin-bottom: 48px;
+    }
+
+    /* ---------- Origin figure ----------
+       Banksy-style pencil sketch generated via Grok (Session 67 non-dev).
+       Looser aesthetic than the rest of the marketing site by design.
+       STYLE_GUIDE.md § 10 carries the AI-imagery policy reversal + /origin allowance. */
+    .origin-figure {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin-bottom: 96px;
+    }
+
+    /* ---------- Section ---------- */
+    section {
+      margin-bottom: 96px;
+    }
+    section:last-of-type { margin-bottom: 96px; }
+
+    section h2 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 40px;
+      letter-spacing: -0.012em;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 32px;
+    }
+
+    section p {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+    section p.secondary {
+      color: var(--ink-soft);
+    }
+    section p:last-child {
+      margin-bottom: 0;
+    }
+
+    section strong {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    section em {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 1.05em;
+    }
+
+    section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 24px 0;
+    }
+    section ul li {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--ink);
+      padding-left: 28px;
+      position: relative;
+      margin-bottom: 20px;
+    }
+    section ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.75em;
+      width: 12px;
+      height: 1px;
+      background: var(--ink-mute);
+    }
+    section ul li:last-child { margin-bottom: 0; }
+
+    /* ---------- CTAs ---------- */
+    .closing {
+      margin-top: 96px;
+      padding-top: 64px;
+      border-top: 1px solid var(--rule);
+      text-align: center;
+    }
+    .closing p {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 24px;
+      color: var(--ink-soft);
+      margin-bottom: 40px;
+      line-height: 1.4;
+    }
+    .choices {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 18px;
+      padding: 16px 32px;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--ink);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition:
+        background-color 140ms ease,
+        color 140ms ease,
+        border-color 140ms ease,
+        transform 80ms ease;
+      min-width: 180px;
+      text-align: center;
+    }
+    .btn:hover,
+    .btn:focus-visible {
+      background: var(--oxblood);
+      color: var(--paper);
+      border-color: var(--oxblood);
+      outline: none;
+    }
+    .btn:active {
+      background: var(--oxblood-deep);
+      border-color: var(--oxblood-deep);
+      transform: translateY(1px);
+    }
+
+    /* ---------- Footer ---------- */
+    footer {
+      padding: 32px 48px 40px;
+      text-align: center;
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--ink-mute);
+      letter-spacing: 0.01em;
+    }
+    footer a {
+      color: var(--ink-mute);
+      text-decoration: none;
+      transition: color 140ms ease;
+    }
+    footer a:hover,
+    footer a:focus-visible {
+      color: var(--oxblood);
+      outline: none;
+    }
+    .footer-dot {
+      color: var(--rule);
+      margin: 0 10px;
+      display: inline-block;
+    }
+
+    /* ---------- Mobile ---------- */
+    @media (max-width: 720px) {
+      header { padding: 24px; }
+      main { padding: 24px 24px 64px; }
+      h1.page-title { font-size: 40px; margin-bottom: 32px; }
+      .origin-figure { margin-bottom: 64px; }
+      section { margin-bottom: 80px; }
+      section h2 { font-size: 32px; margin-bottom: 24px; }
+      section p, section ul li { font-size: 17px; line-height: 1.6; }
+      .closing { margin-top: 64px; padding-top: 48px; }
+      .closing p { font-size: 20px; margin-bottom: 32px; }
+      .lockup-wordmark { font-size: 24px; }
+      .lockup-mark { height: 20px; }
+      .lockup-rule { height: 14px; margin: 0 4px; }
+      .lockup-tag { font-size: 10px; letter-spacing: 0.18em; }
+      .btn { font-size: 16px; padding: 14px 24px; min-width: 0; flex: 1 1 140px; }
+      footer { padding: 24px 24px 32px; font-size: 13px; }
+    }
+
+    @media (max-width: 380px) {
+      .lockup-tag { display: none; }
+      .lockup-rule { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a class="lockup" href="index.html" aria-label="Musonius Multisig Vault — home">
+      <svg class="lockup-mark" viewBox="0 0 52 46" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <rect x="0" y="2" width="52" height="11" fill="currentColor"/>
+        <rect x="9" y="13" width="6" height="33" fill="currentColor"/>
+        <rect x="37" y="13" width="6" height="33" fill="currentColor"/>
+      </svg>
+      <span class="lockup-wordmark">Musonius</span>
+      <span class="lockup-rule" aria-hidden="true"></span>
+      <span class="lockup-tag">Multisig Vault</span>
+    </a>
+  </header>
+
+  <main>
+    <article class="content">
+
+      <h1 class="page-title">The origin.</h1>
+
+      <img class="origin-figure" src="musonius.jpg" alt="A pencil sketch of a single anonymous figure walking forward across an empty field, Banksy in spirit and graphite in execution. The lone silhouette carries the page's contemplative, Stoic register.">
+
+
+      <section>
+        <h2>Who Musonius was.</h2>
+
+        <p>Gaius Musonius Rufus lived in Rome around 30 to 100 AD. He taught Stoic philosophy. His student Epictetus became one of the most quoted figures in the Stoic tradition. Epictetus&rsquo;s lectures, in turn, shaped much of what Marcus Aurelius later wrote in his <em>Meditations</em>.</p>
+
+        <p>Musonius is less famous than his student, and less famous than Aurelius. The Stoic school considers him foundational. He wrote on the everyday practice of virtue: prudence, discipline, austerity, resilience, and the discharge of duty across generations.</p>
+      </section>
+
+      <section>
+        <h2>Why the name fits.</h2>
+
+        <p>The Stoic values map onto what this product is built for. Four of them in particular:</p>
+
+        <ul>
+          <li><strong>Self-custody as discipline.</strong> Holding your own keys is a practice, not a one-time act. Stoic ethics treat virtue the same way: a daily exercise, not a possession.</li>
+          <li><strong>Multi-generational thinking.</strong> Inheritance is the central problem this vault is built for. Stoics wrote about duty across time. To one&rsquo;s family. To one&rsquo;s heirs. To a future one will not see.</li>
+          <li><strong>Austerity and minimal trust.</strong> Musonius holds no keys. It sees no seeds. It signs nothing on your behalf. Its design is austere by construction. The Stoic instruction to "live according to nature" maps cleanly onto "let the cryptography do the work; do not add what is not needed."</li>
+          <li><strong>Resilience.</strong> The long failsafe, the two-key recovery path, the printable Sovereignty Backup Kit. These are answers to "what if everything goes wrong." Stoicism is, at its core, a discipline for the unexpected.</li>
+        </ul>
+
+        <p>Musonius taught Epictetus. Epictetus shaped Marcus Aurelius. The lineage theme, passing knowledge and virtue forward through people we will never meet, is itself an inheritance metaphor.</p>
+
+        <p>Picking the teacher of the more famous student, rather than the famous student himself, is also deliberate. So is choosing a name that lasted two thousand years on its merits rather than on its marketing.</p>
+      </section>
+
+      <section>
+        <h2>Why &ldquo;vault&rdquo; and not &ldquo;wallet.&rdquo;</h2>
+
+        <p>Most Bitcoin software with this shape calls itself a &ldquo;wallet.&rdquo; Sparrow. Liana. Specter. None of them actually hold your keys; they help you use the keys held on your own hardware. Musonius works the same way. We could have called it a wallet without confusing anyone in the Bitcoin space.</p>
+
+        <p>We chose vault instead. Two reasons.</p>
+
+        <p><strong>First, the mental model.</strong> A vault is a container. The container holds many wallets. The vault is the structure: the rules, the keys involved, the waiting periods, the recovery paths. The wallets are the keys themselves, held by you, your cosigner, and your inheritance keyholder. Calling the whole product a &ldquo;wallet&rdquo; would collapse the structure into one of its parts.</p>
+
+        <p><strong>Second, honest framing.</strong> A wallet holds keys. Musonius does not hold keys. Calling it a wallet would create a small, persistent gap between what you expect and what the product does. Calling it a vault tells the truth.</p>
+
+        <p class="secondary">&ldquo;Coordinator&rdquo; or &ldquo;coordination layer&rdquo; would be technically precise. Neither is industry vocabulary, and both would alienate the reader before the product has had a chance to introduce itself. Vault is recognizable, accurate, and matches the way we already think about what we built.</p>
+      </section>
+
+      <div class="closing">
+        <p>Trust in math. Not in people.</p>
+        <div class="choices">
+          <a class="btn" href="https://app.musonius.io">Open the app</a>
+          <a class="btn" href="how_it_works.html">How Musonius works</a>
+        </div>
+      </div>
+
+    </article>
+  </main>
+
+  <footer>
+    <span>Open source</span><span class="footer-dot" aria-hidden="true">&middot;</span><a href="origin.html">The origin</a><span class="footer-dot" aria-hidden="true">&middot;</span><span>Built by Scott Porter</span>
+  </footer>
+
+</body>
+</html>

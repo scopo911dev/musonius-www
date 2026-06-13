@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<!--
+  Musonius /security — Prototype (Session 70 non-dev)
+  Built from Scott's confirmed leans on Q1-Q5:
+    Q1 (a) — Title "Security." Route /security.
+    Q2 (a) — Honest one-liner audit framing in section 3.
+    Q3 (a) — mailto:security@musonius.io + 72h acknowledgement posture in section 5.
+    Q4 (a) — Closing CTAs: Open the app + How Musonius works.
+    Q5    — Five-section structure: model -> bitcoin layers -> platform -> limits -> reporting.
+  Voice discipline from the start (Session 67 lesson): no em-dashes, active voice,
+  "we" allowed in active voice, plain-language openers, smart-non-technical-reader register.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Security. Musonius Multisig Vault</title>
+  <meta name="description" content="How Musonius is secured. What protects your bitcoin. What protects the platform. What we cannot protect against. How to report an issue.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- Tokens ---------- */
+    :root {
+      --paper:        #F4EFE6;
+      --paper-deep:   #ECE5D8;
+      --ink:          #1A1714;
+      --ink-soft:     #4A443D;
+      --ink-mute:     #8A8276;
+      --rule:         #D9D1C0;
+      --oxblood:      #6B1F1A;
+      --oxblood-deep: #4A1612;
+      --font-serif:   'Cormorant Garamond', Georgia, serif;
+      --font-sans:    'Inter', system-ui, sans-serif;
+    }
+
+    /* ---------- Reset ---------- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+    /* ---------- Page ---------- */
+    body {
+      font-family: var(--font-sans);
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* ---------- Lockup ---------- */
+    header {
+      padding: 32px 48px;
+      display: flex;
+      justify-content: flex-start;
+    }
+    .lockup {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .lockup-mark { height: 26px; width: auto; flex-shrink: 0; }
+    .lockup-wordmark {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 32px;
+      letter-spacing: -0.012em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .lockup-rule {
+      width: 1px; height: 18px;
+      background: var(--rule);
+      margin: 0 6px;
+      align-self: center;
+    }
+    .lockup-tag {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--ink-mute);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ---------- Main ---------- */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 48px 96px;
+    }
+
+    .content {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    /* ---------- Page heading ---------- */
+    h1.page-title {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 56px;
+      letter-spacing: -0.018em;
+      line-height: 1.10;
+      color: var(--ink);
+      margin-bottom: 128px;
+    }
+
+    /* ---------- Section ---------- */
+    section {
+      margin-bottom: 96px;
+    }
+    section:last-of-type { margin-bottom: 96px; }
+
+    section .eyebrow {
+      display: block;
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      margin-bottom: 16px;
+    }
+
+    section h2 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 40px;
+      letter-spacing: -0.012em;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 32px;
+    }
+
+    section h3 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 28px;
+      letter-spacing: -0.012em;
+      line-height: 1.20;
+      color: var(--ink);
+      margin-top: 48px;
+      margin-bottom: 20px;
+    }
+
+    section p {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+    section p.secondary {
+      color: var(--ink-soft);
+    }
+    section p:last-child {
+      margin-bottom: 0;
+    }
+
+    section strong {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 24px 0;
+    }
+    section ul li {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--ink);
+      padding-left: 28px;
+      position: relative;
+      margin-bottom: 16px;
+    }
+    section ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.75em;
+      width: 12px;
+      height: 1px;
+      background: var(--ink-mute);
+    }
+    section ul li:last-child { margin-bottom: 0; }
+
+    section a.inline {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      transition: color 140ms ease;
+    }
+    section a.inline:hover,
+    section a.inline:focus-visible {
+      color: var(--oxblood);
+      outline: none;
+    }
+
+    /* ---------- CTAs ---------- */
+    .closing {
+      margin-top: 96px;
+      padding-top: 64px;
+      border-top: 1px solid var(--rule);
+      text-align: center;
+    }
+    .closing p {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 24px;
+      color: var(--ink-soft);
+      margin-bottom: 40px;
+      line-height: 1.4;
+    }
+    .choices {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 18px;
+      padding: 16px 32px;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--ink);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition:
+        background-color 140ms ease,
+        color 140ms ease,
+        border-color 140ms ease,
+        transform 80ms ease;
+      min-width: 180px;
+      text-align: center;
+    }
+    .btn:hover,
+    .btn:focus-visible {
+      background: var(--oxblood);
+      color: var(--paper);
+      border-color: var(--oxblood);
+      outline: none;
+    }
+    .btn:active {
+      background: var(--oxblood-deep);
+      border-color: var(--oxblood-deep);
+      transform: translateY(1px);
+    }
+
+    /* ---------- Footer ---------- */
+    footer {
+      padding: 32px 48px 40px;
+      text-align: center;
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--ink-mute);
+      letter-spacing: 0.01em;
+    }
+    footer a {
+      color: var(--ink-mute);
+      text-decoration: none;
+      transition: color 140ms ease;
+    }
+    footer a:hover,
+    footer a:focus-visible {
+      color: var(--oxblood);
+      outline: none;
+    }
+    .footer-dot {
+      color: var(--rule);
+      margin: 0 10px;
+      display: inline-block;
+    }
+
+    /* ---------- Mobile ---------- */
+    @media (max-width: 720px) {
+      header { padding: 24px; }
+      main { padding: 24px 24px 64px; }
+      h1.page-title { font-size: 40px; margin-bottom: 80px; }
+      section { margin-bottom: 80px; }
+      section h2 { font-size: 32px; margin-bottom: 24px; }
+      section h3 { font-size: 24px; margin-top: 40px; }
+      section p, section ul li { font-size: 17px; line-height: 1.6; }
+      .closing { margin-top: 64px; padding-top: 48px; }
+      .closing p { font-size: 20px; margin-bottom: 32px; }
+      .lockup-wordmark { font-size: 24px; }
+      .lockup-mark { height: 20px; }
+      .lockup-rule { height: 14px; margin: 0 4px; }
+      .lockup-tag { font-size: 10px; letter-spacing: 0.18em; }
+      .btn { font-size: 16px; padding: 14px 24px; min-width: 0; flex: 1 1 140px; }
+      footer { padding: 24px 24px 32px; font-size: 13px; }
+    }
+
+    @media (max-width: 380px) {
+      .lockup-tag { display: none; }
+      .lockup-rule { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a class="lockup" href="index.html" aria-label="Musonius Multisig Vault — home">
+      <svg class="lockup-mark" viewBox="0 0 52 46" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <rect x="0" y="2" width="52" height="11" fill="currentColor"/>
+        <rect x="9" y="13" width="6" height="33" fill="currentColor"/>
+        <rect x="37" y="13" width="6" height="33" fill="currentColor"/>
+      </svg>
+      <span class="lockup-wordmark">Musonius</span>
+      <span class="lockup-rule" aria-hidden="true"></span>
+      <span class="lockup-tag">Multisig Vault</span>
+    </a>
+  </header>
+
+  <main>
+    <article class="content">
+
+      <h1 class="page-title">Security.</h1>
+
+      <section>
+        <span class="eyebrow">The model</span>
+        <h2>What we mean by security.</h2>
+
+        <p>Most security pages explain what an employee can do, what sits in the production database, who has admin access. Ours is shorter, because the architecture has removed those questions before they get asked.</p>
+
+        <p>There are no employees with access to your bitcoin. There is no access to give. There is no production database holding anything that could spend your money. The platform never holds your keys, never sees your keys, and has no code path that asks for them.</p>
+
+        <p>This page is about what is left to secure once those failure modes are structurally gone. The surfaces that do exist, the protections on each one, and the limits we cannot engineer past.</p>
+      </section>
+
+      <section>
+        <span class="eyebrow">Your bitcoin</span>
+        <h2>What protects your bitcoin.</h2>
+
+        <p>Four layers protect the bitcoin in your vault. Each one is independent of the others. A breach of any single layer is a delay, not a loss.</p>
+
+        <h3>Your hardware signing device</h3>
+
+        <p>Your private key lives inside the secure chip of a hardware device that you physically hold. The key never leaves the chip. Every transaction that moves your bitcoin is approved on the device&rsquo;s own small screen, with a physical button press. The device shows you the destination address and the amount before you press. Nothing about that approval flows through a screen we control.</p>
+
+        <p>Devices can be lost, stolen, or destroyed. Your protection against that is the 12 or 24 words you write down at setup, called the seed phrase. Stored offline somewhere only you can reach, those words let you recreate the same key on a new device. We never see those words. They never touch the internet.</p>
+
+        <p>If you lose both the device and the seed phrase, you can no longer sign for your vault. Your bitcoin is still safe. Without your signature, only the long failsafe path can move it, and only after the full long wait you set. During that wait, no one can spend your bitcoin. After the wait, your two cosigners recover the vault using Liana and the Sovereignty Backup Kit.</p>
+
+        <h3>The multisig descriptor</h3>
+
+        <p>Your vault is a 2-of-3 multisig: two of three keys are required to sign any transaction. On the normal path, as long as you are around and able, your key is <strong>always</strong> required to be one of them. Your two cosigners, both chosen by you, cannot sign together without you. This is enforced by math, by the Bitcoin network, not by policy or trust. This is self-custody in the strict sense: you, and only you, can move bitcoin out of your vault on the normal path.</p>
+
+        <p>You choose your cosigners. Both of your non-owner keys are cosigners: one for the normal spending path, one for inheritance recovery. The normal-path cosigner is often a professional partner: a firm whose business is collaborative security for Bitcoin holders. The inheritance cosigner is usually someone closer to you, but at enough arm&rsquo;s length from your day-to-day life to be structurally independent: a sibling in another city, an old friend in a different profession, the executor of your estate.</p>
+
+        <p>Your two cosigners cannot combine their keys to spend on the normal path. Their combined power only opens after the long failsafe completes, set by you and enforced by the Bitcoin network. A quiet alliance between those two is not a quiet alliance. The failsafe gives you months of warning, not days.</p>
+
+        <p>A compromise of any single key, whether yours or one of your cosigners&rsquo;, is not a loss event. It is a "use the remaining good keys to migrate to a new vault" event. The math on the blockchain enforces this. Not us.</p>
+
+        <h3>The timelocks</h3>
+
+        <p>Your vault has two waiting periods written into its rules. A short one, typically seven days, for the path that lets you spend with your inheritance cosigner if your normal-path cosigner becomes unreachable. A long one, typically twelve months, for the failsafe path that opens if you or your key are unable to perform as primary keyholder. Once the vault is created, no one can shorten either period. Not you. Not us. Not anyone. The Bitcoin network enforces both.</p>
+
+        <p>The waiting periods are friction on purpose. The normal path is the everyday way bitcoin moves out of your vault. The other two paths exist for the cases when something has gone wrong: a normal-path cosigner missing, an owner unable to act. They are slow because those cases are rare and serious. The slowness signals that something unusual is happening, and gives you time to notice and respond while it is happening.</p>
+
+        <p>Both clocks reset every time you use the vault. Pay an invoice, send bitcoin to someone, or move bitcoin between your own addresses: each one is a fresh transaction confirmed on the Bitcoin network, and the waiting periods start over. Using the vault is the proof of life. The failsafe only matures when nothing has happened for the full configured period.</p>
+
+        <p>If a recovery-path transaction is signed and waiting to broadcast, you can still stop it. Spend the bitcoin yourself on the normal path with your normal-path cosigner before the wait completes. That spend consumes the inputs the recovery-path transaction was going to use, and the recovery-path transaction becomes invalid. The same mechanism works whether the pending transaction is on the short-wait path or the long failsafe.</p>
+
+        <p>The long wait and the reset together are the architectural answer to the question "how do we resist an attacker who has compromised one party and is waiting patiently?" The timelocks are the safety net under your custody, not a trapdoor under your feet.</p>
+
+        <h3>The independence of your keyholders</h3>
+
+        <p>Three keys held by three structurally separate parties, in three different places, with three different inheritance contexts and incapacity scenarios. The math says 2-of-3. The structure makes it 2-of-3 in practice. A house fire that takes your device does not take your normal-path cosigner&rsquo;s. A hospital stay that puts you offline does not put your inheritance cosigner offline. The diligence here is on who you choose for each role. We provide the framework; you provide the people.</p>
+      </section>
+
+      <section>
+        <span class="eyebrow">The platform</span>
+        <h2>What protects the platform.</h2>
+
+        <p>The platform handles sign-in, session state, signing coordination between you and your keyholders, and the failsafe clock. None of those surfaces touch private keys. All of them still need to be built carefully.</p>
+
+        <p>Musonius does not have user accounts in the way most web services do. No usernames. No passwords. No KYC. No identity documents. Your relationship with the platform is your email address, your hardware device, and the keys you control. There is no account database holding personal information for an attacker to steal.</p>
+
+        <p>Sign-in is a magic link to your email. No password to phish or reuse. You can also enroll a passkey on your device, which is a credential bound to that device&rsquo;s hardware and which cannot be phished, reused, or shared.</p>
+
+        <p>If you lose access to your email and your passkey, you take your account back by signing a challenge with your hardware device and waiting seven days. During that wait, your previous email address and your inheritance cosigner are notified, so a hijacker cannot do this quietly.</p>
+
+        <p>Even if Musonius fails completely, two properties hold up:</p>
+
+        <ul>
+          <li><strong>Your recovery path runs through Liana, independent of us.</strong> Liana is a Bitcoin wallet built by a different team in a different country. It reads your vault&rsquo;s description directly and produces transactions any of your keyholders can sign with their hardware device. A platform compromise would be a notification-and-coordination outage. It would not move a satoshi.</li>
+          <li><strong>Even a complete platform compromise reveals only watchable information.</strong> An attacker who took over the platform tomorrow would learn what your vault looks like, who your keyholders&rsquo; email addresses are, and what transactions are mid-flight. They would not learn anything that could move your bitcoin. The signing keys do not live here.</li>
+        </ul>
+      </section>
+
+      <section>
+        <span class="eyebrow">The category</span>
+        <h2>What Musonius is not.</h2>
+
+        <p>Musonius is a multisig signing coordinator. It is not a mixer, not a privacy coordinator, and not a service that pools funds from different users together.</p>
+
+        <p>Every transaction in a Musonius vault is one owner spending their own bitcoin, signed by their own keys and their own cosigners&rsquo; keys. We never combine your transaction with anyone else&rsquo;s. We never route value between strangers. The platform orchestrates signatures on one owner&rsquo;s transaction, never funds across many.</p>
+
+        <p>The word &ldquo;coordinator&rdquo; is shared across many Bitcoin products and means different things in each. Here, it refers to the path a draft transaction takes between you and your cosigners on its way to being fully signed. Nothing about that path moves bitcoin between unrelated parties, and nothing about it tries to obscure where bitcoin came from or where it is going.</p>
+      </section>
+
+      <section>
+        <span class="eyebrow">The limits</span>
+        <h2>What we cannot protect against.</h2>
+
+        <p>No custody design survives every possible compound failure. The honest question is whether a design makes ordinary single failures survivable. Musonius does. Most ways things can go wrong with one party become a delay, not a loss. A lost device, a deceased cosigner, a coordinator that goes offline: each becomes a wait, not a catastrophe.</p>
+
+        <p>The cases the math cannot save you from:</p>
+
+        <ul>
+          <li><strong>All three keys lost simultaneously.</strong> Nothing survives. The architecture cannot help when nothing remains to sign with. This is the case the Sovereignty Backup Kit, and good operational practice across your keyholders, exists to prevent.</li>
+          <li><strong>An attacker who controls two of your three keyholders during a full failsafe window.</strong> The whole structure assumes the three keyholders are independent from each other. If that assumption is wrong, the math does not save you. We make the wrong assumption hard by giving you three structurally independent parties. We cannot make it impossible.</li>
+        </ul>
+
+        <p>We name these on purpose. A security page that lists what it cannot protect against is more useful than one that does not.</p>
+
+        <p class="secondary">A perfect-custody product would either hold your keys for you, which trades self-sovereignty for resilience, or require so many keys and parties that nobody would set it up. The three-path, two-timelock design is the trade-off curve&rsquo;s sweet spot for the kind of owner Musonius is built for. Enough resilience that ordinary failures do not matter. The owner cryptographically in charge throughout.</p>
+      </section>
+
+      <section>
+        <span class="eyebrow">Disclosure</span>
+        <h2>Reporting an issue.</h2>
+
+        <p>If you find a security issue, write to <a class="inline" href="mailto:security@musonius.io">security@musonius.io</a>. We acknowledge every report within 72 hours and will credit reporters who want public credit.</p>
+
+        <p>For non-security questions about how the system works, the <a class="inline" href="how_it_works.html">How Musonius works</a> and <a class="inline" href="technical_stuff.html">The Technical Stuff</a> pages are the right starting points.</p>
+      </section>
+
+      <div class="closing">
+        <p>Trust in math. Not in people.</p>
+        <div class="choices">
+          <a class="btn" href="https://app.musonius.io">Open the app</a>
+          <a class="btn" href="how_it_works.html">How Musonius works</a>
+        </div>
+      </div>
+
+    </article>
+  </main>
+
+  <footer>
+    <span>Open source</span><span class="footer-dot" aria-hidden="true">&middot;</span><a href="origin.html">The origin</a><span class="footer-dot" aria-hidden="true">&middot;</span><span>Built by Scott Porter</span>
+  </footer>
+
+</body>
+</html>

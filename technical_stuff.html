@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<!--
+  Musonius /technical-stuff — Prototype (Session 67 non-dev)
+  Built from Scott's confirmed leans on Q1-Q4 and Scott's Session 67 revision pass:
+    Q1 (a) — Title "The Technical Stuff" (title-case, no period). Route /technical-stuff.
+    Q2 (a) — Show the locked descriptor in a code block.
+    Q3 (a) — /how-it-works closing CTA -> "Read the technical details" pointing here.
+    Q4    — Name the audit *process* and the FOSS *posture*. No firm, no license, no repo link yet.
+    Revision pass (Session 67): no em-dashes, active voice, "we" allowed,
+                                hardware-vendor-name kept light (BitBox02 named once,
+                                full Liana-supported list for backup recovery),
+                                infrastructure vendor names removed.
+    Reconciliation (2026-06-13, non-dev): aligned to docs/TECH_STACK.md (2026-06-13).
+      - Engine bullet: bdk-wasm is now a hybrid (PSBT construction moved to
+        bitcoinjs-lib/@bitcoinerlab at Session 54). Bullet reworded to a functional
+        "in-browser engine, same libraries as Liana" framing instead of naming bdk-wasm.
+      - Long-wait range: two-key shape allows 6-36 months (DEC-048), not 6-24. Fixed.
+      - Short wait (3-30d) and long wait three-key (6-24mo) confirmed correct per DEC-039.
+-->
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>The Technical Stuff. Musonius Multisig Vault</title>
+  <meta name="description" content="What Musonius is built on. The descriptor that defines a vault. What we never see. How recovery works without us. How you can verify it.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- Tokens ---------- */
+    :root {
+      --paper:        #F4EFE6;
+      --paper-deep:   #ECE5D8;
+      --ink:          #1A1714;
+      --ink-soft:     #4A443D;
+      --ink-mute:     #8A8276;
+      --rule:         #D9D1C0;
+      --oxblood:      #6B1F1A;
+      --oxblood-deep: #4A1612;
+      --font-serif:   'Cormorant Garamond', Georgia, serif;
+      --font-sans:    'Inter', system-ui, sans-serif;
+      --font-mono:    'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+    }
+
+    /* ---------- Reset ---------- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+    /* ---------- Page ---------- */
+    body {
+      font-family: var(--font-sans);
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* ---------- Lockup ---------- */
+    header {
+      padding: 32px 48px;
+      display: flex;
+      justify-content: flex-start;
+    }
+    .lockup {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .lockup-mark { height: 26px; width: auto; flex-shrink: 0; }
+    .lockup-wordmark {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 32px;
+      letter-spacing: -0.012em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .lockup-rule {
+      width: 1px; height: 18px;
+      background: var(--rule);
+      margin: 0 6px;
+      align-self: center;
+    }
+    .lockup-tag {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--ink-mute);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ---------- Main ---------- */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 48px 96px;
+    }
+
+    .content {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    /* ---------- Page heading ---------- */
+    h1.page-title {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 56px;
+      letter-spacing: -0.018em;
+      line-height: 1.10;
+      color: var(--ink);
+      margin-bottom: 128px;
+    }
+
+    /* ---------- Section ---------- */
+    section {
+      margin-bottom: 96px;
+    }
+    section:last-of-type { margin-bottom: 96px; }
+
+    section .eyebrow {
+      display: block;
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      margin-bottom: 16px;
+    }
+
+    section h2 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 40px;
+      letter-spacing: -0.012em;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 32px;
+    }
+
+    section h3 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 28px;
+      letter-spacing: -0.012em;
+      line-height: 1.20;
+      color: var(--ink);
+      margin-top: 48px;
+      margin-bottom: 20px;
+    }
+
+    section p {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+    section p.secondary {
+      color: var(--ink-soft);
+    }
+    section p:last-child {
+      margin-bottom: 0;
+    }
+
+    section strong {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 24px 0;
+    }
+    section ul li {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--ink);
+      padding-left: 28px;
+      position: relative;
+      margin-bottom: 12px;
+    }
+    section ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.75em;
+      width: 12px;
+      height: 1px;
+      background: var(--ink-mute);
+    }
+    section ul li:last-child { margin-bottom: 0; }
+
+    section a.inline {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      transition: color 140ms ease;
+    }
+    section a.inline:hover,
+    section a.inline:focus-visible {
+      color: var(--oxblood);
+      outline: none;
+    }
+
+    /* ---------- Code block component (STYLE_GUIDE.md § 8) ---------- */
+    .code-block {
+      background: var(--paper-deep);
+      border-radius: 4px;
+      padding: 24px;
+      margin: 32px 0;
+      overflow-x: auto;
+    }
+    .code-block .code-label {
+      display: block;
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      margin-bottom: 16px;
+    }
+    .code-block pre {
+      font-family: var(--font-mono);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--ink);
+      white-space: pre;
+      word-wrap: normal;
+    }
+    .code-block .comment { color: var(--ink-mute); }
+
+    /* ---------- CTAs ---------- */
+    .closing {
+      margin-top: 96px;
+      padding-top: 64px;
+      border-top: 1px solid var(--rule);
+      text-align: center;
+    }
+    .closing p {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 24px;
+      color: var(--ink-soft);
+      margin-bottom: 40px;
+      line-height: 1.4;
+    }
+    .choices {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 18px;
+      padding: 16px 32px;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--ink);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition:
+        background-color 140ms ease,
+        color 140ms ease,
+        border-color 140ms ease,
+        transform 80ms ease;
+      min-width: 180px;
+      text-align: center;
+    }
+    .btn:hover,
+    .btn:focus-visible {
+      background: var(--oxblood);
+      color: var(--paper);
+      border-color: var(--oxblood);
+      outline: none;
+    }
+    .btn:active {
+      background: var(--oxblood-deep);
+      border-color: var(--oxblood-deep);
+      transform: translateY(1px);
+    }
+
+    /* ---------- Footer ---------- */
+    footer {
+      padding: 32px 48px 40px;
+      text-align: center;
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--ink-mute);
+      letter-spacing: 0.01em;
+    }
+    footer a {
+      color: var(--ink-mute);
+      text-decoration: none;
+      transition: color 140ms ease;
+    }
+    footer a:hover,
+    footer a:focus-visible {
+      color: var(--oxblood);
+      outline: none;
+    }
+    .footer-dot {
+      color: var(--rule);
+      margin: 0 10px;
+      display: inline-block;
+    }
+
+    /* ---------- Mobile ---------- */
+    @media (max-width: 720px) {
+      header { padding: 24px; }
+      main { padding: 24px 24px 64px; }
+      h1.page-title { font-size: 40px; margin-bottom: 80px; }
+      section { margin-bottom: 80px; }
+      section h2 { font-size: 32px; margin-bottom: 24px; }
+      section h3 { font-size: 24px; margin-top: 40px; }
+      section p, section ul li { font-size: 17px; line-height: 1.6; }
+      .code-block { padding: 20px; margin: 24px 0; }
+      .code-block pre { font-size: 12.5px; }
+      .closing { margin-top: 64px; padding-top: 48px; }
+      .closing p { font-size: 20px; margin-bottom: 32px; }
+      .lockup-wordmark { font-size: 24px; }
+      .lockup-mark { height: 20px; }
+      .lockup-rule { height: 14px; margin: 0 4px; }
+      .lockup-tag { font-size: 10px; letter-spacing: 0.18em; }
+      .btn { font-size: 16px; padding: 14px 24px; min-width: 0; flex: 1 1 140px; }
+      footer { padding: 24px 24px 32px; font-size: 13px; }
+    }
+
+    @media (max-width: 380px) {
+      .lockup-tag { display: none; }
+      .lockup-rule { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a class="lockup" href="index.html" aria-label="Musonius Multisig Vault — home">
+      <svg class="lockup-mark" viewBox="0 0 52 46" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <rect x="0" y="2" width="52" height="11" fill="currentColor"/>
+        <rect x="9" y="13" width="6" height="33" fill="currentColor"/>
+        <rect x="37" y="13" width="6" height="33" fill="currentColor"/>
+      </svg>
+      <span class="lockup-wordmark">Musonius</span>
+      <span class="lockup-rule" aria-hidden="true"></span>
+      <span class="lockup-tag">Multisig Vault</span>
+    </a>
+  </header>
+
+  <main>
+    <article class="content">
+
+      <h1 class="page-title">The Technical Stuff</h1>
+
+      <section>
+        <span class="eyebrow">Architecture</span>
+        <h2>The stack.</h2>
+
+        <p>Musonius does not invent a new system to keep your bitcoin safe. We use the rules Bitcoin already has. Those rules live on the blockchain itself, and the entire Bitcoin network enforces them. There is no parallel system to trust. No private database with the real truth. The rules of your vault are part of Bitcoin, not part of Musonius.</p>
+
+        <p>Underneath, the pieces that make those rules practical to write, register, and sign for:</p>
+
+        <ul>
+          <li><strong>Miniscript.</strong> A structured way of writing the rules for how bitcoin can be spent. Easier to read, easier to check, and harder to get wrong than writing Bitcoin script by hand. Bitcoin researchers developed it in 2019; production wallets like Liana and our own Musonius use it today. <a class="inline" href="https://bitcoinops.org/en/topics/miniscript/" target="_blank" rel="noopener">A short introduction.</a></li>
+          <li><strong>Descriptors.</strong> The format that records your vault&rsquo;s complete configuration in one short piece of text. Anyone with the descriptor can rebuild what your vault looks like.</li>
+          <li><strong>BIP-388 wallet policies.</strong> The standard format that miniscript-compatible hardware signing devices use. Your hardware key registers your vault&rsquo;s policy once. After that, it can display your addresses and sign for your transactions.</li>
+          <li><strong>Hardware signing device.</strong> The device that holds your private key and produces your signatures. The secret key never leaves your device. The device has its own screen, so you can verify every address before you use it. Musonius supports the <a class="inline" href="https://bitbox.swiss/bitbox02/" target="_blank" rel="noopener">BitBox02</a> today. For independent backup recovery through Liana (see below), you can also use Coldcard, Jade, Trezor, or Specter DIY.</li>
+          <li><strong>An in-browser Bitcoin engine.</strong> The software that builds your addresses, watches the blockchain for your balance, and prepares your transactions for signing. It runs inside your browser, not on our servers, and is built on the same open-source Bitcoin libraries that independent wallets like Liana rely on.</li>
+        </ul>
+
+        <p>The rest is standard web infrastructure. None of it sees anything it shouldn&rsquo;t.</p>
+      </section>
+
+      <section>
+        <span class="eyebrow">Policy</span>
+        <h2>The descriptor.</h2>
+
+        <p>One short piece of text defines every Musonius vault. We call it the <em>descriptor</em>. It captures everything about how your vault works: which keys are involved, what each key can do, and how long any waiting periods last. The descriptor goes in. Your addresses, your spending rules, and everything else about the vault come out.</p>
+
+        <p>Today, two descriptor shapes ship. More may follow.</p>
+
+        <h3>Three-key, three-path (with cosigner)</h3>
+
+        <p>The default shape for a vault that has both a working cosigner relationship and an inheritance plan. Three keys; three ways to spend.</p>
+
+        <div class="code-block" role="region" aria-label="Three-key descriptor">
+          <span class="code-label">Three-key wallet policy &middot; @0 = Owner &middot; @1 = Cosigner &middot; @2 = Inheritance</span>
+          <pre>wsh(or_i(
+  and_v(v:pk(@0/&lt;0;1&gt;/*),pk(@1/&lt;0;1&gt;/*)),                          <span class="comment"># Path 1: Owner + Cosigner</span>
+  or_i(
+    and_v(v:pk(@0/&lt;2;3&gt;/*),and_v(v:pk(@2/&lt;2;3&gt;/*),older(SHORT))),  <span class="comment"># Path 2: Owner + Inheritance, after SHORT</span>
+    and_v(v:pk(@1/&lt;4;5&gt;/*),and_v(v:pk(@2/&lt;4;5&gt;/*),older(LONG)))    <span class="comment"># Path 3: Cosigner + Inheritance, after LONG</span>
+  )
+))</pre>
+        </div>
+
+        <p>Three spending paths, each with its own keys and its own waiting period. Path 1 is the normal way your funds move: you and your cosigner, both signing, no delay. Path 2 is your sovereignty escape: you and your inheritance keyholder, after a short waiting period (usually seven days), if your cosigner becomes unreachable. Path 3 is the failsafe: your cosigner and your inheritance keyholder, after a long waiting period (usually twelve months), if you cannot act at all.</p>
+
+        <p class="secondary">This is the spending-paths layer of how Musonius works. The rest of the security model lives on <a class="inline" href="security.html">the security page</a>.</p>
+
+        <h3>Two-key, two-path (no cosigner)</h3>
+
+        <p>The simpler shape, for a vault whose only redundancy plan is inheritance.</p>
+
+        <div class="code-block" role="region" aria-label="Two-key descriptor">
+          <span class="code-label">Two-key wallet policy &middot; @0 = Owner &middot; @1 = Inheritance</span>
+          <pre>wsh(or_i(
+  pk(@0/&lt;0;1&gt;/*),                                  <span class="comment"># Path 1: Owner alone</span>
+  and_v(v:pk(@1/&lt;0;1&gt;/*), older(LONG))             <span class="comment"># Path 2: Inheritance, after LONG</span>
+))</pre>
+        </div>
+
+        <p>You spend on your own under normal conditions. If you stop being able to act, your inheritance key takes over after the long waiting period passes.</p>
+
+        <h3>The waiting periods</h3>
+
+        <p>Both shapes use one or two waiting-period values. You choose them when you set the vault up:</p>
+
+        <ul>
+          <li><strong>The short wait.</strong> Default 7 days, anywhere from 3 to 30. Path 2 in the three-key shape uses it, when you need to spend without your cosigner.</li>
+          <li><strong>The long wait.</strong> Default 12 months. The three-key shape allows 6 to 24 months; the simpler two-key shape allows 6 to 36. Path 3 in the three-key shape and Path 2 in the two-key shape both use it. This is the failsafe that opens when you can no longer act.</li>
+        </ul>
+
+        <p>Once you create a vault, these values become part of the script. No one can shorten them after the fact. Not you. Not us. Not anyone. That is the point. A waiting period that could be shortened later would not be a waiting period.</p>
+
+        <h3>Why this format and not the newer one</h3>
+
+        <p>Bitcoin offers more than one way to write a script like this. Musonius uses the older, more thoroughly tested format (called <strong>P2WSH</strong>) instead of the newer one (Taproot). The reason is plain. The tools that read Musonius vaults independently, including Liana on your laptop, work well on P2WSH today. Taproot support is still catching up. The descriptor moves to Taproot when the rest of the ecosystem does, not before.</p>
+      </section>
+
+      <section>
+        <span class="eyebrow">Privacy</span>
+        <h2>What we never see.</h2>
+
+        <p>Musonius sees only information that is safe for anyone to see. It does not see, and cannot see, anything that could move your money.</p>
+
+        <p>What Musonius does have:</p>
+
+        <ul>
+          <li><strong>Your public keys.</strong> A way to work out every address your vault uses, without revealing the secret keys that actually sign. Bitcoin calls these <em>extended public keys</em>, or xpubs. They are public material by design. Sharing them does not compromise anything.</li>
+          <li><strong>Your vault&rsquo;s descriptor.</strong> The same configuration shown above. Anyone with it can watch your balance. Nobody with it can move your money.</li>
+          <li><strong>Email addresses</strong> for sign-in and for notifying your other keyholders when a transaction needs their signature.</li>
+          <li><strong>Transactions waiting for signatures.</strong> When a transaction needs two signatures and the first signer has just signed, Musonius holds the half-signed version so the second signer&rsquo;s browser can pick it up. Holding a half-signed transaction does not let us complete it. The missing signature still has to come from the missing signer&rsquo;s hardware device. (Bitcoin calls this half-signed format a PSBT, or partially-signed Bitcoin transaction.)</li>
+        </ul>
+
+        <p>What Musonius never has:</p>
+
+        <ul>
+          <li>Private keys.</li>
+          <li>Seed phrases.</li>
+          <li>Backups of your seed, encrypted or otherwise.</li>
+          <li>Signatures we did not need you to initiate.</li>
+        </ul>
+
+        <p>This is not a promise. We built it that way. The platform&rsquo;s code has no way to create, request, receive, or store any of those things. That part of the system does not exist. Signatures happen on your hardware device, between its screen and your finger. Your browser hands the unsigned transaction to the device and takes the signed result back. Musonius sees the same data anyone watching the Bitcoin network would see after you broadcast.</p>
+      </section>
+
+      <section>
+        <span class="eyebrow">Recovery</span>
+        <h2>Independent recovery.</h2>
+
+        <p>If we leave tomorrow, your vault works. We do not hold your money. It lives on the Bitcoin network. You hold your keys, on hardware in your possession. The blockchain holds the rules of your vault. None of those things go away if we do.</p>
+
+        <p>The recovery path runs through <strong><a class="inline" href="https://wizardsardine.com/liana/" target="_blank" rel="noopener">Liana</a></strong>, a separately-built Bitcoin wallet from a company called <strong><a class="inline" href="https://wizardsardine.com/" target="_blank" rel="noopener">Wizardsardine</a></strong>. Liana reads your vault&rsquo;s description, finds your balance on the Bitcoin network, and produces transactions any of your keyholders can sign with their hardware device. A different team built it, in a different country, with different funding. If something happened to Musonius, Liana would not be affected.</p>
+
+        <p>Musonius generates your <strong>Sovereignty Backup Kit</strong> when you set up the vault. It is a printable PDF that carries everything Liana needs: the description of your vault, a step-by-step walkthrough, and the context a non-technical inheritor needs to find a competent advisor. Print it. Store it the way you store your other estate documents.</p>
+
+        <h3>Honest caveats</h3>
+
+        <p>Two limits worth naming directly:</p>
+
+        <ul>
+          <li><strong>Sparrow does not work yet.</strong> Sparrow is the other major Bitcoin wallet that could read your vault independently. Support for the kind of long-waiting-period rules Musonius uses is still being worked on. We track <a class="inline" href="https://github.com/sparrowwallet/sparrow/issues/1296" target="_blank" rel="noopener">the open issue here</a>. When it ships, your Sovereignty Backup Kit will add a Sparrow walkthrough alongside the Liana one.</li>
+          <li><strong>Liana&rsquo;s look and feel is not Musonius&rsquo;s.</strong> Liana is a working wallet, built for people doing routine bitcoin operations. It is not a polished experience for the moment of inheritance recovery. A non-technical inheritor opening Liana for the first time will find a more technical interface than the one they would see in Musonius. The walkthrough in your Sovereignty Backup Kit is written for exactly that reader.</li>
+        </ul>
+      </section>
+
+      <section>
+        <span class="eyebrow">Verification</span>
+        <h2>Verifying it yourself.</h2>
+
+        <p>We will publish the Musonius source code openly when the security audit completes. Anyone will be able to read it, check it, or rebuild from it. Until then, the codebase is on a structured path to that point:</p>
+
+        <ul>
+          <li>A full in-house review of the code against common web-application security concerns.</li>
+          <li>An external paid audit by a security firm that specializes in Bitcoin software, focused on the parts that handle keys, scripts, and transactions.</li>
+          <li>No real-money client vault is activated before that external audit completes.</li>
+        </ul>
+
+        <p>What you can already check today, even before the code is open: <strong>the description of your vault itself.</strong> The format Musonius uses is the same format Liana and other Bitcoin tools already read. Anyone you trust (a developer friend, a Bitcoin-savvy advisor, a future tool you choose) can look at your vault&rsquo;s description and confirm it works the way Musonius says it does. The rules are a Bitcoin script. Nobody, including us, gets to interpret a Bitcoin script differently than the network does.</p>
+
+        <p class="secondary">When the audit completes and the code opens, this section will link to the report and to the repository.</p>
+      </section>
+
+      <div class="closing">
+        <p>Trust in math. Not in people.</p>
+        <div class="choices">
+          <a class="btn" href="https://app.musonius.io">Open the app</a>
+          <a class="btn" href="how_it_works.html">How Musonius works</a>
+        </div>
+      </div>
+
+    </article>
+  </main>
+
+  <footer>
+    <span>Open source</span><span class="footer-dot" aria-hidden="true">&middot;</span><a href="origin.html">The origin</a><span class="footer-dot" aria-hidden="true">&middot;</span><span>Built by Scott Porter</span>
+  </footer>
+
+</body>
+</html>
