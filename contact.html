@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<!--
+  Musonius /contact — short contact form + direct email (non-dev, 2026-06-29)
+  Scott's brief: footer Contact link -> short form (name, email, message) with
+  help@musonius.io listed at the top, so visitors can email directly or use the form.
+  Static site, no backend: the form composes a mailto: to help@musonius.io.
+  Upgrade path (needs a key/endpoint): Web3Forms / Formspree / Vercel function.
+  Voice discipline (site standard): no em-dashes, active voice, plain language.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Contact. Musonius Multisig Vault</title>
+  <meta name="description" content="Get in touch with Musonius. Email us directly, or send a short note.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- Tokens ---------- */
+    :root {
+      --paper:        #F4EFE6;
+      --paper-deep:   #ECE5D8;
+      --ink:          #1A1714;
+      --ink-soft:     #4A443D;
+      --ink-mute:     #8A8276;
+      --rule:         #D9D1C0;
+      --oxblood:      #6B1F1A;
+      --oxblood-deep: #4A1612;
+      --font-serif:   'Cormorant Garamond', Georgia, serif;
+      --font-sans:    'Inter', system-ui, sans-serif;
+    }
+
+    /* ---------- Reset ---------- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+    /* ---------- Page ---------- */
+    body {
+      font-family: var(--font-sans);
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* ---------- Lockup ---------- */
+    header {
+      padding: 32px 48px;
+      display: flex;
+      justify-content: flex-start;
+    }
+    .lockup {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .lockup-mark { height: 26px; width: auto; flex-shrink: 0; }
+    .lockup-wordmark {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 32px;
+      letter-spacing: -0.012em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .lockup-rule {
+      width: 1px; height: 18px;
+      background: var(--rule);
+      margin: 0 6px;
+      align-self: center;
+    }
+    .lockup-tag {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--ink-mute);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ---------- Main ---------- */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 48px 96px;
+    }
+    .content {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    /* ---------- Heading ---------- */
+    h1.page-title {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 56px;
+      letter-spacing: -0.018em;
+      line-height: 1.10;
+      color: var(--ink);
+      margin-bottom: 40px;
+    }
+
+    section { margin-bottom: 56px; }
+
+    section p {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+    section p:last-child { margin-bottom: 0; }
+
+    a.inline {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      transition: color 140ms ease;
+    }
+    a.inline:hover, a.inline:focus-visible { color: var(--oxblood); outline: none; }
+
+    /* ---------- Direct email line ---------- */
+    .email-direct {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 30px;
+      letter-spacing: -0.008em;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .email-direct a {
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--rule);
+      transition: color 140ms ease, border-color 140ms ease;
+    }
+    .email-direct a:hover, .email-direct a:focus-visible {
+      color: var(--oxblood);
+      border-color: var(--oxblood);
+      outline: none;
+    }
+    .email-sub {
+      font-family: var(--font-sans);
+      font-size: 17px;
+      color: var(--ink-soft);
+      margin-bottom: 0;
+    }
+
+    /* ---------- Form ---------- */
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      max-width: 520px;
+    }
+    .field { display: flex; flex-direction: column; gap: 8px; }
+    .field label {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+    }
+    .field input, .field textarea {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 17px;
+      color: var(--ink);
+      background: var(--paper-deep);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: 12px 14px;
+      width: 100%;
+      transition: border-color 140ms ease;
+    }
+    .field textarea { min-height: 150px; resize: vertical; }
+    .field input:focus, .field textarea:focus {
+      outline: none;
+      border-color: var(--oxblood);
+    }
+    .field input::placeholder, .field textarea::placeholder { color: var(--ink-mute); }
+
+    .btn {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 18px;
+      padding: 16px 32px;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--ink);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      align-self: flex-start;
+      transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease, transform 80ms ease;
+      min-width: 180px;
+      text-align: center;
+    }
+    .btn:hover, .btn:focus-visible {
+      background: var(--oxblood);
+      color: var(--paper);
+      border-color: var(--oxblood);
+      outline: none;
+    }
+    .btn:active {
+      background: var(--oxblood-deep);
+      border-color: var(--oxblood-deep);
+      transform: translateY(1px);
+    }
+
+    /* ---------- Footer ---------- */
+    footer {
+      padding: 32px 48px 40px;
+      text-align: center;
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--ink-mute);
+      letter-spacing: 0.01em;
+    }
+    footer a {
+      color: var(--ink-mute);
+      text-decoration: none;
+      transition: color 140ms ease;
+    }
+    footer a:hover, footer a:focus-visible { color: var(--oxblood); outline: none; }
+    .footer-dot { color: var(--rule); margin: 0 10px; display: inline-block; }
+
+    /* ---------- Mobile ---------- */
+    @media (max-width: 720px) {
+      header { padding: 24px; }
+      main { padding: 24px 24px 64px; }
+      h1.page-title { font-size: 40px; margin-bottom: 32px; }
+      section { margin-bottom: 48px; }
+      section p { font-size: 17px; line-height: 1.6; }
+      .email-direct { font-size: 24px; }
+      .lockup-wordmark { font-size: 24px; }
+      .lockup-mark { height: 20px; }
+      .lockup-rule { height: 14px; margin: 0 4px; }
+      .lockup-tag { font-size: 10px; letter-spacing: 0.18em; }
+      .btn { font-size: 16px; padding: 14px 24px; min-width: 0; width: 100%; }
+      footer { padding: 24px 24px 32px; font-size: 13px; }
+    }
+    @media (max-width: 380px) {
+      .lockup-tag { display: none; }
+      .lockup-rule { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a class="lockup" href="index.html" aria-label="Musonius Multisig Vault — home">
+      <svg class="lockup-mark" viewBox="0 0 52 46" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <rect x="0" y="2" width="52" height="11" fill="currentColor"/>
+        <rect x="9" y="13" width="6" height="33" fill="currentColor"/>
+        <rect x="37" y="13" width="6" height="33" fill="currentColor"/>
+      </svg>
+      <span class="lockup-wordmark">Musonius</span>
+      <span class="lockup-rule" aria-hidden="true"></span>
+      <span class="lockup-tag">Multisig Vault</span>
+    </a>
+  </header>
+
+  <main>
+    <article class="content">
+
+      <h1 class="page-title">Contact.</h1>
+
+      <section>
+        <p class="email-direct">Email us at <a href="mailto:help@musonius.io">help@musonius.io</a></p>
+        <p class="email-sub">Or send a short note below. It opens your email app with the details filled in.</p>
+      </section>
+
+      <section>
+        <form class="contact-form" id="contact-form" novalidate>
+          <div class="field">
+            <label for="cf-name">Name</label>
+            <input type="text" id="cf-name" name="name" autocomplete="name" placeholder="Your name">
+          </div>
+          <div class="field">
+            <label for="cf-email">Email</label>
+            <input type="email" id="cf-email" name="email" autocomplete="email" placeholder="you@example.com">
+          </div>
+          <div class="field">
+            <label for="cf-message">Message</label>
+            <textarea id="cf-message" name="message" placeholder="How can we help?"></textarea>
+          </div>
+          <button type="submit" class="btn">Send</button>
+        </form>
+      </section>
+
+    </article>
+  </main>
+
+  <footer>
+    <span>Open source</span><span class="footer-dot" aria-hidden="true">&middot;</span><a href="index.html">Home</a><span class="footer-dot" aria-hidden="true">&middot;</span><a href="contact.html">Contact</a><span class="footer-dot" aria-hidden="true">&middot;</span><span>Built by Scott Porter</span>
+  </footer>
+
+  <script>
+    document.getElementById('contact-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = document.getElementById('cf-name').value.trim();
+      var email = document.getElementById('cf-email').value.trim();
+      var message = document.getElementById('cf-message').value.trim();
+      var subject = 'Musonius contact' + (name ? ' from ' + name : '');
+      var body = 'Name: ' + name + '\nEmail: ' + email + '\n\n' + message;
+      window.location.href = 'mailto:help@musonius.io?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    });
+  </script>
+
+</body>
+</html>

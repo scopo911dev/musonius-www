@@ -112,7 +112,14 @@
       letter-spacing: -0.018em;
       line-height: 1.10;
       color: var(--ink);
-      margin-bottom: 128px;
+      margin-bottom: 40px;
+    }
+
+    .page-figure {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin: 0 auto 96px;
     }
 
     /* ---------- Section ---------- */
@@ -296,7 +303,8 @@
     @media (max-width: 720px) {
       header { padding: 24px; }
       main { padding: 24px 24px 64px; }
-      h1.page-title { font-size: 40px; margin-bottom: 80px; }
+      h1.page-title { font-size: 40px; margin-bottom: 32px; }
+      .page-figure { margin: 0 auto 64px; }
       section { margin-bottom: 80px; }
       section h2 { font-size: 32px; margin-bottom: 24px; }
       section h3 { font-size: 24px; margin-top: 40px; }
@@ -337,6 +345,8 @@
 
       <h1 class="page-title">Security.</h1>
 
+      <img class="page-figure" src="security.jpg" alt="A graphite sketch of a single figure standing calm at the center of an empty field while tangled scribbles gather at the far edges but do not cross the line to reach them, in the same contemplative register as the other Musonius illustrations.">
+
       <section>
         <span class="eyebrow">The model</span>
         <h2>What we mean by security.</h2>
@@ -344,6 +354,8 @@
         <p>Most security pages explain what an employee can do, what sits in the production database, who has admin access. Ours is shorter, because the architecture has removed those questions before they get asked.</p>
 
         <p>There are no employees with access to your bitcoin. There is no access to give. There is no production database holding anything that could spend your money. The platform never holds your keys, never sees your keys, and has no code path that asks for them.</p>
+
+        <p>And we hide none of it. The full design of a Musonius vault is public, down to the exact rules your bitcoin is locked to. A system that is only safe while its design stays secret is not safe; one that stays safe even when it is completely known is. Cryptographers call that <a class="inline" href="kerckhoffs.html">Kerckhoffs&rsquo;s principle</a>, and it is why we can show you everything on this page and invite you to check it yourself.</p>
 
         <p>This page is about what is left to secure once those failure modes are structurally gone. The surfaces that do exist, the protections on each one, and the limits we cannot engineer past. It is also about what happens when you want to leave. The answer is the same: you do not need us.</p>
       </section>
@@ -405,7 +417,7 @@
 
         <ul>
           <li><strong>Your recovery path runs through Liana, independent of us.</strong> Liana is a Bitcoin wallet built by a different team in a different country. It reads your vault&rsquo;s description directly and produces transactions any of your keyholders can sign with their hardware device. A platform compromise would be a notification-and-coordination outage. It would not move a satoshi.</li>
-          <li><strong>Even a complete platform compromise reveals only watchable information.</strong> An attacker who took over the platform tomorrow would learn what your vault looks like, who your keyholders&rsquo; email addresses are, and what transactions are mid-flight. They would not learn anything that could move your bitcoin. The signing keys do not live here. A design that stays safe even when it is fully known is the point, not an accident; cryptographers call it <a class="inline" href="kerckhoffs.html">Kerckhoffs&rsquo;s principle</a>.</li>
+          <li><strong>Even a complete platform compromise reveals only watchable information.</strong> An attacker who took over the platform tomorrow would learn what your vault looks like, who your keyholders&rsquo; email addresses are, and what transactions are mid-flight. They would not learn anything that could move your bitcoin. The signing keys do not live here.</li>
         </ul>
       </section>
 
@@ -438,20 +450,11 @@
         <p class="secondary">A perfect-custody product would either hold your keys for you, which trades self-sovereignty for resilience, or require so many keys and parties that nobody would set it up. The three-path, two-timelock design is the trade-off curve&rsquo;s sweet spot for the kind of owner Musonius is built for. Enough resilience that ordinary failures do not matter. The owner cryptographically in charge throughout.</p>
       </section>
 
-      <section>
-        <span class="eyebrow">Disclosure</span>
-        <h2>Reporting an issue.</h2>
-
-        <p>If you find a security issue, write to <a class="inline" href="mailto:security@musonius.io">security@musonius.io</a>. We acknowledge every report within 72 hours and will credit reporters who want public credit.</p>
-
-        <p>For non-security questions about how the system works, the <a class="inline" href="how_it_works.html">How Musonius works</a> and <a class="inline" href="technical_stuff.html">The Technical Stuff</a> pages are the right starting points.</p>
-      </section>
-
       <div class="closing">
         <p>Trust in math. Not in people.</p>
         <div class="choices">
           <a class="btn" href="https://testapp.musonius.io">Open the app</a>
-          <a class="btn" href="how_it_works.html">How Musonius works</a>
+          <a class="btn" href="origin.html">The Origin</a>
         </div>
       </div>
 
@@ -459,7 +462,7 @@
   </main>
 
   <footer>
-    <span>Open source</span><span class="footer-dot" aria-hidden="true">&middot;</span><a href="origin.html">The origin</a><span class="footer-dot" aria-hidden="true">&middot;</span><span>Built by Scott Porter</span>
+    <span>Open source</span><span class="footer-dot" aria-hidden="true">&middot;</span><a href="index.html">Home</a><span class="footer-dot" aria-hidden="true">&middot;</span><a href="contact.html">Contact</a><span class="footer-dot" aria-hidden="true">&middot;</span><span>Built by Scott Porter</span>
   </footer>
 
 </body>

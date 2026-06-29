@@ -122,7 +122,7 @@
       font-size: 22px;
       line-height: 1.50;
       color: var(--ink-soft);
-      margin-bottom: 128px;
+      margin-bottom: 56px;
     }
 
     /* ---------- Section ---------- */
@@ -162,37 +162,11 @@
     }
 
     /* ---------- Diagram placeholder ---------- */
-    .diagram-placeholder {
+    .diagram-figure {
+      display: block;
       width: 100%;
-      max-width: 600px;
-      height: 400px;
-      margin: 48px auto;
-      border: 1px dashed var(--rule);
-      background: var(--paper-deep);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 32px;
-      text-align: center;
-    }
-    .diagram-placeholder .label {
-      font-family: var(--font-sans);
-      font-weight: 500;
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--ink-mute);
-      margin-bottom: 16px;
-    }
-    .diagram-placeholder .desc {
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-weight: 500;
-      font-size: 20px;
-      color: var(--ink-soft);
-      line-height: 1.4;
-      max-width: 360px;
+      height: auto;
+      margin: 0 auto 96px;
     }
 
     /* ---------- CTAs ---------- */
@@ -281,12 +255,11 @@
       header { padding: 24px; }
       main { padding: 24px 24px 64px; }
       h1.page-title { font-size: 40px; margin-bottom: 20px; }
-      p.lede { font-size: 19px; margin-bottom: 80px; }
+      p.lede { font-size: 19px; margin-bottom: 40px; }
       section { margin-bottom: 80px; }
       section h2 { font-size: 32px; margin-bottom: 24px; }
       section p { font-size: 17px; line-height: 1.6; }
-      .diagram-placeholder { height: 320px; margin: 32px auto; padding: 24px; }
-      .diagram-placeholder .desc { font-size: 17px; }
+      .diagram-figure { margin: 0 auto 64px; }
       .closing { margin-top: 64px; padding-top: 48px; }
       .closing p { font-size: 20px; margin-bottom: 32px; }
       .lockup-wordmark { font-size: 24px; }
@@ -327,6 +300,8 @@
         A Bitcoin security solution. Sovereign by design. Built to outlast you.
       </p>
 
+      <img class="diagram-figure" src="three-man-walking.jpg" alt="A graphite sketch of three men crossing an open field: two walking together in the foreground and a third figure alone in the distance, in the same contemplative register as the other Musonius illustrations.">
+
       <section>
         <h2>Why this exists.</h2>
         <p>Self-custody matters to you. Not your keys, not your coins.</p>
@@ -346,11 +321,6 @@
 
         <p>The vault&rsquo;s rules, written into the Bitcoin blockchain when the vault is created, require your key for the everyday path and for the short-cooldown recovery path. Two of your other keyholders cannot move funds while you are present and able to act. This is not a promise — it is the script.</p>
 
-        <div class="diagram-placeholder" role="img" aria-label="Diagram of the vault structure — placeholder">
-          <span class="label">Diagram — to be commissioned</span>
-          <span class="desc">The structure of the vault: the three paths funds can move, and the failsafe timing for the failure modes.</span>
-        </div>
-
         <p>The rule holds until you cannot act. If you lose your key, become incapacitated, or are no longer here, a third path opens after a long failsafe of inactivity — usually six to twelve months. Recovery requires two of your three keyholders, neither of whom is the platform. The long delay gives legitimate parties time to coordinate and gives any wrongful attempt time to be noticed. The structural independence of the keyholders — who, by design, are not related to one another — makes wrongful coordination logistically hard.</p>
 
         <p class="secondary">Each key lives on its holder&rsquo;s own hardware signing device. The Sovereignty Backup Kit, generated at vault setup, lets you recover from your own vault using software we did not write. If Musonius is gone tomorrow, your vault still works. And if you simply want to leave while we are still here, you do not need our permission: wait the short timelock, use your inheritance keyholder, and move on. None of these mechanisms depend on us.</p>
@@ -368,7 +338,7 @@
         <p>Trust in math. Not in people.</p>
         <div class="choices">
           <a class="btn" href="https://testapp.musonius.io">Open the app</a>
-          <a class="btn" href="technical_stuff.html">Read the technical details</a>
+          <a class="btn" href="technical_stuff.html">Technical Details</a>
         </div>
       </div>
 
@@ -376,7 +346,7 @@
   </main>
 
   <footer>
-    <span>Open source</span><span class="footer-dot" aria-hidden="true">·</span><a href="origin.html">The origin</a><span class="footer-dot" aria-hidden="true">·</span><span>Built by Scott Porter</span>
+    <span>Open source</span><span class="footer-dot" aria-hidden="true">·</span><a href="index.html">Home</a><span class="footer-dot" aria-hidden="true">&middot;</span><a href="contact.html">Contact</a><span class="footer-dot" aria-hidden="true">·</span><span>Built by Scott Porter</span>
   </footer>
 
 </body>
