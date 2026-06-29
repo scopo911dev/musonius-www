@@ -376,7 +376,7 @@
 
         <p>Your vault has two waiting periods written into its rules. A short one, typically seven days, for the path that lets you spend with your inheritance cosigner if your normal-path cosigner becomes unreachable. A long one, typically twelve months, for the failsafe path that opens if you or your key are unable to perform as primary keyholder. Once the vault is created, no one can shorten either period. Not you. Not us. Not anyone. The Bitcoin network enforces both.</p>
 
-        <p>The waiting periods are friction on purpose. The normal path is the everyday way bitcoin moves out of your vault. The other two paths exist for the cases when something has gone wrong: a normal-path cosigner missing, an owner unable to act. They are slow because those cases are rare and serious. The slowness signals that something unusual is happening, and gives you time to notice and respond while it is happening.</p>
+        <p>The waiting periods are friction on purpose. The normal path is the everyday way bitcoin moves out of your vault. The other two paths exist for the cases when something has gone wrong: a normal-path cosigner missing, an owner unable to act. They are slow because those cases are rare and serious. Two enforcers guard that window: the math, which makes an early spend impossible to fake, and the people, you and both your keyholders, alerted the moment a slow path begins, who make it impossible to hide. The slowness is not dead time. It is your time to notice and respond while it is happening.</p>
 
         <p>Both clocks reset every time you use the vault. Pay an invoice, send bitcoin to someone, or move bitcoin between your own addresses: each one is a fresh transaction confirmed on the Bitcoin network, and the waiting periods start over. Using the vault is the proof of life. The failsafe only matures when nothing has happened for the full configured period.</p>
 
@@ -405,7 +405,7 @@
 
         <ul>
           <li><strong>Your recovery path runs through Liana, independent of us.</strong> Liana is a Bitcoin wallet built by a different team in a different country. It reads your vault&rsquo;s description directly and produces transactions any of your keyholders can sign with their hardware device. A platform compromise would be a notification-and-coordination outage. It would not move a satoshi.</li>
-          <li><strong>Even a complete platform compromise reveals only watchable information.</strong> An attacker who took over the platform tomorrow would learn what your vault looks like, who your keyholders&rsquo; email addresses are, and what transactions are mid-flight. They would not learn anything that could move your bitcoin. The signing keys do not live here.</li>
+          <li><strong>Even a complete platform compromise reveals only watchable information.</strong> An attacker who took over the platform tomorrow would learn what your vault looks like, who your keyholders&rsquo; email addresses are, and what transactions are mid-flight. They would not learn anything that could move your bitcoin. The signing keys do not live here. A design that stays safe even when it is fully known is the point, not an accident; cryptographers call it <a class="inline" href="kerckhoffs.html">Kerckhoffs&rsquo;s principle</a>.</li>
         </ul>
       </section>
 

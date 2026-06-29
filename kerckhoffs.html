@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<!--
+  Musonius /kerckhoffs — Draft (non-dev, 2026-06-29)
+  Scott's brief: a page by itself on Kerckhoffs's principle and the history of the
+  author, explaining why publishing our own design is safe. Links in from the
+  "this is Kerckhoffs's principle" line on the technical/security pages.
+  Voice discipline (site standard): no em-dashes, active voice, "we" allowed,
+  plain-language, smart-non-technical-reader register.
+  NOTE: portrait is a placeholder. Drop a public-domain image at kerckhoffs.jpg
+  (Auguste Kerckhoffs, d. 1903, public domain on Wikimedia Commons) and swap the
+  .portrait-placeholder block for the <img> shown in the commented figure below.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Kerckhoffs&rsquo;s Principle. Musonius Multisig Vault</title>
+  <meta name="description" content="Why we can publish exactly how a Musonius vault works and lose nothing by doing it. A 140-year-old idea, and the man behind it.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- Tokens ---------- */
+    :root {
+      --paper:        #F4EFE6;
+      --paper-deep:   #ECE5D8;
+      --ink:          #1A1714;
+      --ink-soft:     #4A443D;
+      --ink-mute:     #8A8276;
+      --rule:         #D9D1C0;
+      --oxblood:      #6B1F1A;
+      --oxblood-deep: #4A1612;
+      --font-serif:   'Cormorant Garamond', Georgia, serif;
+      --font-sans:    'Inter', system-ui, sans-serif;
+    }
+
+    /* ---------- Reset ---------- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+    /* ---------- Page ---------- */
+    body {
+      font-family: var(--font-sans);
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* ---------- Lockup ---------- */
+    header {
+      padding: 32px 48px;
+      display: flex;
+      justify-content: flex-start;
+    }
+    .lockup {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .lockup-mark { height: 26px; width: auto; flex-shrink: 0; }
+    .lockup-wordmark {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 32px;
+      letter-spacing: -0.012em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .lockup-rule {
+      width: 1px; height: 18px;
+      background: var(--rule);
+      margin: 0 6px;
+      align-self: center;
+    }
+    .lockup-tag {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--ink-mute);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ---------- Main ---------- */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 48px 96px;
+    }
+
+    .content {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    /* ---------- Page heading ---------- */
+    h1.page-title {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 56px;
+      letter-spacing: -0.018em;
+      line-height: 1.10;
+      color: var(--ink);
+      margin-bottom: 32px;
+    }
+    p.standfirst {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 24px;
+      line-height: 1.45;
+      color: var(--ink-soft);
+      margin-bottom: 56px;
+    }
+
+    /* ---------- Author figure (full-width hero, matches /origin) ---------- */
+    .author-figure {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin: 0 0 96px;
+    }
+
+    /* ---------- Section ---------- */
+    section {
+      margin-bottom: 96px;
+    }
+    section:last-of-type { margin-bottom: 96px; }
+
+    section .eyebrow {
+      display: block;
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      margin-bottom: 16px;
+    }
+
+    section h2 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 40px;
+      letter-spacing: -0.012em;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 32px;
+    }
+
+    section h3 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 28px;
+      letter-spacing: -0.012em;
+      line-height: 1.20;
+      color: var(--ink);
+      margin-top: 48px;
+      margin-bottom: 20px;
+    }
+
+    section p {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+    section p.secondary {
+      color: var(--ink-soft);
+    }
+    section p:last-child {
+      margin-bottom: 0;
+    }
+
+    section strong {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 24px 0;
+    }
+    section ul li {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--ink);
+      padding-left: 28px;
+      position: relative;
+      margin-bottom: 16px;
+    }
+    section ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.75em;
+      width: 12px;
+      height: 1px;
+      background: var(--ink-mute);
+    }
+    section ul li:last-child { margin-bottom: 0; }
+
+    section a.inline {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      transition: color 140ms ease;
+    }
+    section a.inline:hover,
+    section a.inline:focus-visible {
+      color: var(--oxblood);
+      outline: none;
+    }
+
+    /* ---------- Pull-quote (the principle itself) ---------- */
+    .principle {
+      margin: 8px 0 0;
+      padding: 32px 0 8px;
+      border-top: 1px solid var(--rule);
+    }
+    .principle blockquote {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 30px;
+      line-height: 1.35;
+      letter-spacing: -0.008em;
+      color: var(--ink);
+    }
+    .principle cite {
+      display: block;
+      font-family: var(--font-sans);
+      font-style: normal;
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      margin-top: 24px;
+    }
+
+    /* ---------- CTAs ---------- */
+    .closing {
+      margin-top: 96px;
+      padding-top: 64px;
+      border-top: 1px solid var(--rule);
+      text-align: center;
+    }
+    .closing p {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 24px;
+      color: var(--ink-soft);
+      margin-bottom: 40px;
+      line-height: 1.4;
+    }
+    .choices {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 18px;
+      padding: 16px 32px;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--ink);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition:
+        background-color 140ms ease,
+        color 140ms ease,
+        border-color 140ms ease,
+        transform 80ms ease;
+      min-width: 180px;
+      text-align: center;
+    }
+    .btn:hover,
+    .btn:focus-visible {
+      background: var(--oxblood);
+      color: var(--paper);
+      border-color: var(--oxblood);
+      outline: none;
+    }
+    .btn:active {
+      background: var(--oxblood-deep);
+      border-color: var(--oxblood-deep);
+      transform: translateY(1px);
+    }
+
+    /* ---------- Footer ---------- */
+    footer {
+      padding: 32px 48px 40px;
+      text-align: center;
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--ink-mute);
+      letter-spacing: 0.01em;
+    }
+    footer a {
+      color: var(--ink-mute);
+      text-decoration: none;
+      transition: color 140ms ease;
+    }
+    footer a:hover,
+    footer a:focus-visible {
+      color: var(--oxblood);
+      outline: none;
+    }
+    .footer-dot {
+      color: var(--rule);
+      margin: 0 10px;
+      display: inline-block;
+    }
+
+    /* ---------- Mobile ---------- */
+    @media (max-width: 720px) {
+      header { padding: 24px; }
+      main { padding: 24px 24px 64px; }
+      h1.page-title { font-size: 40px; margin-bottom: 24px; }
+      p.standfirst { font-size: 20px; margin-bottom: 32px; }
+      section { margin-bottom: 80px; }
+      section h2 { font-size: 32px; margin-bottom: 24px; }
+      section h3 { font-size: 24px; margin-top: 40px; }
+      section p, section ul li { font-size: 17px; line-height: 1.6; }
+      .principle blockquote { font-size: 24px; }
+      .author-figure { margin-bottom: 64px; }
+      .closing { margin-top: 64px; padding-top: 48px; }
+      .closing p { font-size: 20px; margin-bottom: 32px; }
+      .lockup-wordmark { font-size: 24px; }
+      .lockup-mark { height: 20px; }
+      .lockup-rule { height: 14px; margin: 0 4px; }
+      .lockup-tag { font-size: 10px; letter-spacing: 0.18em; }
+      .btn { font-size: 16px; padding: 14px 24px; min-width: 0; flex: 1 1 140px; }
+      footer { padding: 24px 24px 32px; font-size: 13px; }
+    }
+
+    @media (max-width: 380px) {
+      .lockup-tag { display: none; }
+      .lockup-rule { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a class="lockup" href="index.html" aria-label="Musonius Multisig Vault — home">
+      <svg class="lockup-mark" viewBox="0 0 52 46" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <rect x="0" y="2" width="52" height="11" fill="currentColor"/>
+        <rect x="9" y="13" width="6" height="33" fill="currentColor"/>
+        <rect x="37" y="13" width="6" height="33" fill="currentColor"/>
+      </svg>
+      <span class="lockup-wordmark">Musonius</span>
+      <span class="lockup-rule" aria-hidden="true"></span>
+      <span class="lockup-tag">Multisig Vault</span>
+    </a>
+  </header>
+
+  <main>
+    <article class="content">
+
+      <h1 class="page-title">Kerckhoffs&rsquo;s Principle.</h1>
+      <p class="standfirst">Why we can show you exactly how the vault works, and lose nothing by doing it.</p>
+
+      <img class="author-figure" src="kerckhoffs.jpg" alt="A pencil sketch of Auguste Kerckhoffs, a bearded 19th-century man in a Victorian suit, walking forward across an empty field. Graphite in execution, Banksy in spirit, in the same contemplative register as the figure on the origin page.">
+
+
+      <section>
+        <span class="eyebrow">The principle</span>
+        <h2>Security that does not depend on a secret.</h2>
+
+        <p>There is an old instinct that says a lock is safer if no one knows how it is built. The opposite is true. A lock that is only safe because its design is hidden fails the moment someone works it out. And someone always works it out.</p>
+
+        <p>The better standard is more than a century old.</p>
+
+        <div class="principle">
+          <blockquote>A system should stay secure even when everything about its design is public. The only thing that must stay secret is the key.</blockquote>
+          <cite>Kerckhoffs&rsquo;s principle, 1883</cite>
+        </div>
+
+        <p style="margin-top:32px;">It is the reason we can publish the exact rules that lock your vault, the descriptor, the spending paths, the waiting periods, and give nothing away by doing so. The strength of a Musonius vault was never in keeping its design quiet. It is in the Bitcoin network enforcing rules that cannot be faked, and in your keys never leaving your hands. Publish the blueprint. The vault is just as safe.</p>
+      </section>
+
+      <section>
+        <span class="eyebrow">The author</span>
+        <h2>Auguste Kerckhoffs.</h2>
+
+        <p>Auguste Kerckhoffs (1835&ndash;1903) was a Dutch linguist and cryptographer, born in Nuth, in the Netherlands, and later a professor of languages in Paris. He spoke and taught several languages, and for a time was a leading champion of Volap&uuml;k, an early attempt at a universal constructed language. He spent his life, in other words, on the problem of how meaning is shared clearly between people.</p>
+
+        <p>In 1883 he published a short work in a French military journal, <em>La Cryptographie Militaire</em>, or &ldquo;Military Cryptography.&rdquo; In it he set out six design rules for a practical battlefield cipher. Most are about being usable in the field: easy to operate, portable, workable over a telegraph. But the second rule outlived the rest and became the foundation of modern cryptography.</p>
+
+        <p>In plain terms, it says this: assume your adversary knows everything about how your system works, and design it so that is fine. The decades since have only proven him right. Every cipher that relied on a hidden design has eventually fallen. The ones that survive are the ones published openly, attacked by everyone, and still standing.</p>
+
+        <p>The cryptographer Claude Shannon later restated it even more bluntly, in a line engineers still quote today: <strong>the enemy knows the system.</strong></p>
+      </section>
+
+      <section>
+        <span class="eyebrow">Why it matters</span>
+        <h2>Why we publish our own design.</h2>
+
+        <p>Kerckhoffs&rsquo;s principle is the quiet reason behind some of the most important things about a Musonius vault.</p>
+
+        <ul>
+          <li><strong>We can publish the descriptor.</strong> The literal rules your bitcoin is locked to are <a class="inline" href="technical_stuff.html">written out on the technical page</a>, because secrecy was never doing the work. The Bitcoin network is.</li>
+          <li><strong>We hand you the rules in writing.</strong> Your Sovereignty Backup Kit carries the full vault descriptor on paper, precisely because knowing the design is safe. It is the public blueprint that lets you recover your bitcoin with open-source tools and no help from us.</li>
+          <li><strong>You do not have to trust us. You can check us.</strong> A claim you can verify yourself is worth more than one you take on faith. Open design is what makes verification possible.</li>
+        </ul>
+
+        <p>This is also why we are comfortable telling you exactly how everything works, in as much detail as you care to read. A vault whose safety depended on you <em>not</em> understanding it would not be a vault worth putting your savings in.</p>
+
+        <p class="secondary">This product is named for the Stoic philosopher Musonius Rufus, and it is built on a conviction Kerckhoffs shared with him: sound principles do not need to be hidden to hold.</p>
+      </section>
+
+      <div class="closing">
+        <p>Trust in math. Not in people.</p>
+        <div class="choices">
+          <a class="btn" href="technical_stuff.html">The technical details</a>
+          <a class="btn" href="how_it_works.html">How Musonius works</a>
+        </div>
+      </div>
+
+    </article>
+  </main>
+
+  <footer>
+    <span>Open source</span><span class="footer-dot" aria-hidden="true">&middot;</span><a href="origin.html">The origin</a><span class="footer-dot" aria-hidden="true">&middot;</span><span>Built by Scott Porter</span>
+  </footer>
+
+</body>
+</html>

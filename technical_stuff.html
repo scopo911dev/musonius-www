@@ -16,6 +16,11 @@
         "in-browser engine, same libraries as Liana" framing instead of naming bdk-wasm.
       - Long-wait range: two-key shape allows 6-36 months (DEC-048), not 6-24. Fixed.
       - Short wait (3-30d) and long wait three-key (6-24mo) confirmed correct per DEC-039.
+    Reconciliation (2026-06-29, non-dev): DEC-053 (Session 96) caps EVERY older()
+      long timelock at 14 months. older() is a BIP-68 relative timelock, max 65,535
+      blocks (~15mo); 24mo and 36mo were never representable and risked silent
+      truncation. Both shapes' long wait is now 6-14 months. Default 12mo unchanged.
+      Do not reintroduce 24mo / 36mo here.
 -->
 
 <html lang="en">
@@ -443,7 +448,7 @@
 
         <ul>
           <li><strong>The short wait.</strong> Default 7 days, anywhere from 3 to 30. Path 2 in the three-key shape uses it, when you need to spend without your cosigner.</li>
-          <li><strong>The long wait.</strong> Default 12 months. The three-key shape allows 6 to 24 months; the simpler two-key shape allows 6 to 36. Path 3 in the three-key shape and Path 2 in the two-key shape both use it. This is the failsafe that opens when you can no longer act.</li>
+          <li><strong>The long wait.</strong> Default 12 months. Both shapes allow 6 to 14 months. Path 3 in the three-key shape and Path 2 in the two-key shape both use it. This is the failsafe that opens when you can no longer act.</li>
         </ul>
 
         <p>Once you create a vault, these values become part of the script. No one can shorten them after the fact. Not you. Not us. Not anyone. That is the point. A waiting period that could be shortened later would not be a waiting period.</p>
