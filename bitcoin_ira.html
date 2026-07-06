@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<!--
+  Musonius /bitcoin-ira — Prototype (Session 130 non-dev)
+  Purpose: describe the Musonius vault shape for a self-directed IRA (SDIRA)
+  that holds self-custody bitcoin.
+  Governing discipline (see TBA_Vault/docs/SDIRA_POSITIONING.md):
+    TWO AXES, kept separate:
+      - Compliance comes from the qualified custodian, NOT the key split.
+      - Safety comes from the key split (owner holds 1 of 3, never a quorum alone).
+    Never let copy say the key structure keeps you compliant.
+  Custodian named generically ("your IRA custodian / a qualified custodian")
+  pending Scott's call on naming Advanta Trust publicly.
+  Incumbent (monitor-and-notify) model described but NOT named.
+  Deliberately silent on Path 2 timelock timing (security.html still shows the
+  pre-DEC-062 seven-day wait; avoid cross-page contradiction).
+  Voice discipline: no em-dashes, active voice, plain-language, smart
+  non-technical reader.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Bitcoin IRAs. Musonius Multisig Vault</title>
+  <meta name="description" content="How the Musonius vault fits a self-directed IRA that holds self-custody bitcoin. Compliance comes from your custodian. Safety comes from the math. You hold one key of three and never move the bitcoin alone.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- Tokens ---------- */
+    :root {
+      --paper:        #F4EFE6;
+      --paper-deep:   #ECE5D8;
+      --ink:          #1A1714;
+      --ink-soft:     #4A443D;
+      --ink-mute:     #8A8276;
+      --rule:         #D9D1C0;
+      --oxblood:      #6B1F1A;
+      --oxblood-deep: #4A1612;
+      --font-serif:   'Cormorant Garamond', Georgia, serif;
+      --font-sans:    'Inter', system-ui, sans-serif;
+    }
+
+    /* ---------- Reset ---------- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+    /* ---------- Page ---------- */
+    body {
+      font-family: var(--font-sans);
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* ---------- Lockup ---------- */
+    header {
+      padding: 32px 48px;
+      display: flex;
+      justify-content: flex-start;
+    }
+    .lockup {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .lockup-mark { height: 26px; width: auto; flex-shrink: 0; }
+    .lockup-wordmark {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 32px;
+      letter-spacing: -0.012em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .lockup-rule {
+      width: 1px; height: 18px;
+      background: var(--rule);
+      margin: 0 6px;
+      align-self: center;
+    }
+    .lockup-tag {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--ink-mute);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ---------- Main ---------- */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 48px 96px;
+    }
+
+    .content {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    /* ---------- Page heading ---------- */
+    h1.page-title {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 56px;
+      letter-spacing: -0.018em;
+      line-height: 1.10;
+      color: var(--ink);
+      margin-bottom: 40px;
+    }
+
+    .page-figure {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin: 0 auto 96px;
+    }
+
+    /* ---------- Section ---------- */
+    section {
+      margin-bottom: 96px;
+    }
+    section:last-of-type { margin-bottom: 96px; }
+
+    section .eyebrow {
+      display: block;
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      margin-bottom: 16px;
+    }
+
+    section h2 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 40px;
+      letter-spacing: -0.012em;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 32px;
+    }
+
+    section h3 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 28px;
+      letter-spacing: -0.012em;
+      line-height: 1.20;
+      color: var(--ink);
+      margin-top: 48px;
+      margin-bottom: 20px;
+    }
+
+    section p {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+    section p.secondary {
+      color: var(--ink-soft);
+    }
+    section p:last-child {
+      margin-bottom: 0;
+    }
+
+    section strong {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 24px 0;
+    }
+    section ul li {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--ink);
+      padding-left: 28px;
+      position: relative;
+      margin-bottom: 16px;
+    }
+    section ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.75em;
+      width: 12px;
+      height: 1px;
+      background: var(--ink-mute);
+    }
+    section ul li:last-child { margin-bottom: 0; }
+
+    section a.inline {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      transition: color 140ms ease;
+    }
+    section a.inline:hover,
+    section a.inline:focus-visible {
+      color: var(--oxblood);
+      outline: none;
+    }
+
+    /* ---------- CTAs ---------- */
+    .closing {
+      margin-top: 96px;
+      padding-top: 64px;
+      border-top: 1px solid var(--rule);
+      text-align: center;
+    }
+    .closing p {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 24px;
+      color: var(--ink-soft);
+      margin-bottom: 40px;
+      line-height: 1.4;
+    }
+    .choices {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 18px;
+      padding: 16px 32px;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--ink);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition:
+        background-color 140ms ease,
+        color 140ms ease,
+        border-color 140ms ease,
+        transform 80ms ease;
+      min-width: 180px;
+      text-align: center;
+    }
+    .btn:hover,
+    .btn:focus-visible {
+      background: var(--oxblood);
+      color: var(--paper);
+      border-color: var(--oxblood);
+      outline: none;
+    }
+    .btn:active {
+      background: var(--oxblood-deep);
+      border-color: var(--oxblood-deep);
+      transform: translateY(1px);
+    }
+
+    /* ---------- Footer ---------- */
+    footer {
+      padding: 32px 48px 40px;
+      text-align: center;
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--ink-mute);
+      letter-spacing: 0.01em;
+    }
+    footer a {
+      color: var(--ink-mute);
+      text-decoration: none;
+      transition: color 140ms ease;
+    }
+    footer a:hover,
+    footer a:focus-visible {
+      color: var(--oxblood);
+      outline: none;
+    }
+    .footer-dot {
+      color: var(--rule);
+      margin: 0 10px;
+      display: inline-block;
+    }
+
+    /* ---------- Mobile ---------- */
+    @media (max-width: 720px) {
+      header { padding: 24px; }
+      main { padding: 24px 24px 64px; }
+      h1.page-title { font-size: 40px; margin-bottom: 32px; }
+      .page-figure { margin: 0 auto 64px; }
+      section { margin-bottom: 80px; }
+      section h2 { font-size: 32px; margin-bottom: 24px; }
+      section h3 { font-size: 24px; margin-top: 40px; }
+      section p, section ul li { font-size: 17px; line-height: 1.6; }
+      .closing { margin-top: 64px; padding-top: 48px; }
+      .closing p { font-size: 20px; margin-bottom: 32px; }
+      .lockup-wordmark { font-size: 24px; }
+      .lockup-mark { height: 20px; }
+      .lockup-rule { height: 14px; margin: 0 4px; }
+      .lockup-tag { font-size: 10px; letter-spacing: 0.18em; }
+      .btn { font-size: 16px; padding: 14px 24px; min-width: 0; flex: 1 1 140px; }
+      footer { padding: 24px 24px 32px; font-size: 13px; }
+    }
+
+    @media (max-width: 380px) {
+      .lockup-tag { display: none; }
+      .lockup-rule { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a class="lockup" href="index.html" aria-label="Musonius Multisig Vault — home">
+      <svg class="lockup-mark" viewBox="0 0 52 46" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <rect x="0" y="2" width="52" height="11" fill="currentColor"/>
+        <rect x="9" y="13" width="6" height="33" fill="currentColor"/>
+        <rect x="37" y="13" width="6" height="33" fill="currentColor"/>
+      </svg>
+      <span class="lockup-wordmark">Musonius</span>
+      <span class="lockup-rule" aria-hidden="true"></span>
+      <span class="lockup-tag">Multisig Vault</span>
+    </a>
+  </header>
+
+  <main>
+    <article class="content">
+
+      <h1 class="page-title">Bitcoin IRAs.</h1>
+
+      <img class="page-figure" src="ira.jpg" alt="A graphite sketch in the contemplative Musonius register: a single figure walking a long straight path toward a distant horizon, a case held at their side, in the same quiet field as the other illustrations.">
+
+      <section>
+        <span class="eyebrow">The shape</span>
+        <h2>Two jobs, not one.</h2>
+
+        <p>A self-directed IRA that holds bitcoin has to do two separate things well, and it is easy to blur them together. It has to be a proper, compliant retirement account. And it has to keep the bitcoin genuinely safe.</p>
+
+        <p>Those are different jobs, handled by different parts of the structure. Compliance comes from your custodian. Safety comes from how the keys are held. Keeping the two apart is the whole point, and it is the first thing to be clear about, because most confusion in this corner of the market comes from mixing them.</p>
+      </section>
+
+      <section>
+        <span class="eyebrow">Compliance</span>
+        <h2>The custodian makes it an IRA.</h2>
+
+        <p>What makes your account a real, IRS-compliant IRA is a qualified custodian. The custodian holds the account, titles it for the benefit of your IRA, and handles contributions and distributions the way the rules require. That is the part that keeps you on the right side of the line.</p>
+
+        <p>It is not the multisig. It is not any particular arrangement of keys. A provider who tells you that the key setup itself is what keeps you compliant is quietly skipping the part that actually does the work. The keys are a security question, and we will get to them next. Compliance is a custodian question, and the custodian answers it.</p>
+
+        <p>Musonius works alongside your IRA custodian. We are not your custodian, and we never hold your bitcoin. The custodian keeps the account correct. We keep the bitcoin safe. Two jobs, two parties, no overlap.</p>
+      </section>
+
+      <section>
+        <span class="eyebrow">Control</span>
+        <h2>You hold one key of three.</h2>
+
+        <p>This is the safety half, and it is where Musonius is built differently from most bitcoin retirement setups.</p>
+
+        <p>In many accounts described as multisig, you hold enough keys to move the bitcoin by yourself. That is still a compliant account, but from a control standpoint it is the same as keeping everything on a single device. If your keys are taken, or you are pressured into signing, nothing stands in the way.</p>
+
+        <p>In a Musonius vault you hold <strong>one key of three</strong>, and you can never move the bitcoin alone. An independent cosigner is required every time. A key taken from you, on its own, moves nothing.</p>
+
+        <p>There is a gentler version of the weaker setup worth naming. Some services watch your vault and send you an alert when bitcoin moves. A notice is useful, but it is a record of something that already happened. It cannot stop a spend, because you already held enough keys to make it. A required second signature is a different kind of thing. It does not tell you after the fact. It decides whether the spend happens at all.</p>
+
+        <p>For money you might touch every day, that extra step is friction. For a retirement account meant to sit untouched for years, <strong>the friction is the protection.</strong> It is the reason a single bad moment, a stolen key, a coerced signature, a convincing fake page, cannot empty the account on its own.</p>
+      </section>
+
+      <section>
+        <span class="eyebrow">Succession</span>
+        <h2>Inheritance is already built in.</h2>
+
+        <p>An IRA is built to pass to the people you name. The vault is built the same way, so the two fit together without bolting anything on.</p>
+
+        <p>The person you choose as your inheritance keyholder maps naturally onto the beneficiary of the account. If you become unable to act, then after a long and clearly signaled waiting period your two cosigners can recover the bitcoin for your heirs. Your keys never have to surface, and the bitcoin never has to be sold to make the handover work.</p>
+
+        <p>During your life that waiting period resets every time you use the vault, so it never runs down by accident. Your heirs inherit the bitcoin itself, held the same sovereign way you held it, not a paper claim on someone else&rsquo;s balance sheet.</p>
+      </section>
+
+      <section>
+        <span class="eyebrow">Honest limits</span>
+        <h2>What we do not claim.</h2>
+
+        <p>A page that only lists advantages is not worth trusting. Here is what this structure does not do, stated plainly.</p>
+
+        <ul>
+          <li><strong>We do not claim our keys keep you compliant.</strong> Your custodian does that. We keep the bitcoin safe; the custodian keeps the account correct. If anyone blurs those two, be careful.</li>
+          <li><strong>We do not claim the watch-and-notify approach is unsafe.</strong> It is a real design, and it gives you more day-to-day freedom than we do. Our edge is structural, not a claim that anyone else is careless.</li>
+          <li><strong>We do not hide the cost of our way.</strong> Because you hold only one key, an everyday spend needs a cosigner in the loop. We think that is the right trade for retirement bitcoin meant to sit for years. You should know it is a trade before you make it.</li>
+        </ul>
+
+        <p>We name these on purpose. The right structure for your retirement bitcoin is a decision you should be able to make with your eyes open.</p>
+      </section>
+
+      <div class="closing">
+        <p>Compliance from the custodian. Safety from the math.</p>
+        <div class="choices">
+          <a class="btn" href="contact.html">Talk to us</a>
+          <a class="btn" href="how_it_works.html">How it works</a>
+        </div>
+      </div>
+
+    </article>
+  </main>
+
+  <footer>
+    <span>Open source</span><span class="footer-dot" aria-hidden="true">&middot;</span><a href="index.html">Home</a><span class="footer-dot" aria-hidden="true">&middot;</span><a href="contact.html">Contact</a><span class="footer-dot" aria-hidden="true">&middot;</span><span>Built by Scott Porter</span>
+  </footer>
+
+</body>
+</html>
