@@ -319,17 +319,21 @@
 
         <p>The rule holds because the math is built to enforce it. Musonius the platform holds no keys — it cannot sign for anything in your vault, ever. There is no platform key to compromise, no override to subvert, no employee discipline that needs to hold. This is not policy — it is the structural absence of the thing that would make policy necessary.</p>
 
-        <p>The vault&rsquo;s rules, written into the Bitcoin blockchain when the vault is created, require your key for the everyday path and for the short-cooldown recovery path. Two of your other keyholders cannot move funds while you are present and able to act. This is not a promise — it is the script.</p>
+        <p>The vault&rsquo;s rules, written into the Bitcoin blockchain when the vault is created, require your key on every path that can move funds while you are able to act. Your other keyholders cannot move funds between themselves while you are present. This is not a promise — it is the script.</p>
 
         <p>The rule holds until you cannot act. If you lose your key, become incapacitated, or are no longer here, a third path opens after a long failsafe of inactivity — usually six to twelve months. Recovery requires two of your three keyholders, neither of whom is the platform. The long delay gives legitimate parties time to coordinate and gives any wrongful attempt time to be noticed. The structural independence of the keyholders — who, by design, are not related to one another — makes wrongful coordination logistically hard.</p>
 
-        <p class="secondary">Each key lives on its holder&rsquo;s own hardware signing device. The Sovereignty Backup Kit, generated at vault setup, lets you recover from your own vault using software we did not write. If Musonius is gone tomorrow, your vault still works. And if you simply want to leave while we are still here, you do not need our permission: wait the short timelock, use your inheritance keyholder, and move on. None of these mechanisms depend on us.</p>
+        <p class="secondary">Each key lives on its holder&rsquo;s own hardware signing device. The Sovereignty Backup Kit, generated at vault setup, lets you recover from your own vault using software we did not write. If Musonius is gone tomorrow, your vault still works. And if you simply want to leave while we are still here, you do not need our permission and you do not have to wait: sign with your own key and your inheritance keyholder, and move on. None of these mechanisms depend on us.</p>
+
+        <p>This page describes the three-key vault, which is what most people choose. There is also a simpler two-key version: you and one inheritance keyholder, with no cosigner. It is quicker to set up and it keeps the same failsafe recovery, but it makes a real trade. In the three-key vault, no single key can move your bitcoin. In the two-key vault, your own key spends on its own, so that one key carries the whole weight of everyday security. Choose it for simplicity, not for strength.</p>
       </section>
 
       <section>
         <h2>The honest part.</h2>
         <p>There are no perfect custody designs. Every architecture is a trade-off between sovereignty, convenience, recoverability, and resilience against attack. The honest engineers acknowledge this; the providers selling certainty do not.</p>
-        <p>Musonius cannot save you from every possible compound failure. If all three of your keys are lost at the same time, nothing survives. If both of your non-owner keyholders coordinate against you for the full failsafe period — without you noticing, without you able to act — they can recover the funds. The friction is long, the structural independence makes it hard, but the math does not strictly prevent it. We will not tell you it does.</p>
+        <p>Musonius cannot save you from every possible compound failure. If every one of your keys is lost at the same time, nothing survives. If both of your non-owner keyholders coordinate against you for the full failsafe period — without you noticing, without you able to act — they can recover the funds. The friction is long, the structural independence makes it hard, but the math does not strictly prevent it. We will not tell you it does.</p>
+
+        <p>The two-key vault carries one more. After the failsafe period, your inheritance keyholder can recover on their own, because there is no second person who has to agree. That is the same mechanism that protects your family if you are gone. In a two-key vault it rests on one person instead of two.</p>
         <p>What Musonius gives you is a vault where the math handles what math can handle, where the friction in the failure modes is built around independence and time, and where no party — including us — has the structural ability to collude with anyone.</p>
         <p>We don't pretend otherwise. We just designed the trade-offs honestly.</p>
       </section>
