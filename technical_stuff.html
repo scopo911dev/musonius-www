@@ -21,6 +21,32 @@
       blocks (~15mo); 24mo and 36mo were never representable and risked silent
       truncation. Both shapes' long wait is now 6-14 months. Default 12mo unchanged.
       Do not reintroduce 24mo / 36mo here.
+    Reconciliation (2026-08-12, non-dev): DEC-062 + its 2026-07-04 amendment.
+      Path 2 (Owner + Inheritance) no longer has a short timelock. It carries a
+      minimal older(1) ONLY so Liana will import the descriptor (Liana refuses a
+      two-immediate-path policy). This page had been describing the superseded
+      7-day / 3-30d model since 2026-07-04. Fixed in three places: the three-key
+      code block (older(SHORT) -> older(1)), the paths paragraph beneath it, and
+      the waiting-periods list. Do not reintroduce a short wait here; the long
+      wait is now the only wait that delays anything. Source: docs/DECISIONS.md
+      DEC-062, frontend/lib/multipath-descriptor.ts (shortBlocks = 1).
+    Addition (2026-08-12, non-dev): Verification section gained the review-trail
+      block, sourced from the Fable Tier-4 sweep (work_log/sessions/124) and the
+      Kimi K3 scan + triage (docs/security_scans/2026-08-01). Deliberate limits:
+      no model names, no finding counts or severities, no specific findings.
+      Open items in the SEC queue (BACKLOG #100/#101/#102/#103/#105) are an
+      attack guide while the repo is closed. Describe the practice, not results.
+      The block sits UNDER the in-house-review bullet and ABOVE the external-audit
+      bullet on purpose: position is what stops it reading as an independent
+      audit. Do not move it above the bullet list.
+    Correction (2026-08-14, Scott's call): cut the claim "Every confirmed defect
+      was fixed and re-verified against the live system." It was false when
+      written and is false now. The 2026-08-01 scan produced six confirmed
+      defects; only SEC-1 (#98, #99) is closed. SEC-2 (#100, #102) and SEC-3
+      (#101, #103) are open, and #102 is a dead passkey control that reads as
+      live. Do not reinstate any "all defects fixed" line until BACKLOG's SEC
+      queue is actually empty. The surviving two bullets (custody core held;
+      defects were coordination-layer) are supported by the triage and stay.
 -->
 
 <html lang="en">
@@ -428,13 +454,15 @@
           <pre>wsh(or_i(
   and_v(v:pk(@0/&lt;0;1&gt;/*),pk(@1/&lt;0;1&gt;/*)),                          <span class="comment"># Path 1: Owner + Cosigner</span>
   or_i(
-    and_v(v:pk(@0/&lt;2;3&gt;/*),and_v(v:pk(@2/&lt;2;3&gt;/*),older(SHORT))),  <span class="comment"># Path 2: Owner + Inheritance, after SHORT</span>
+    and_v(v:pk(@0/&lt;2;3&gt;/*),and_v(v:pk(@2/&lt;2;3&gt;/*),older(1))),      <span class="comment"># Path 2: Owner + Inheritance, after 1 block</span>
     and_v(v:pk(@1/&lt;4;5&gt;/*),and_v(v:pk(@2/&lt;4;5&gt;/*),older(LONG)))    <span class="comment"># Path 3: Cosigner + Inheritance, after LONG</span>
   )
 ))</pre>
         </div>
 
-        <p>Three spending paths, each with its own keys and its own waiting period. Path 1 is the normal way your funds move: you and your cosigner, both signing, no delay. Path 2 is your sovereignty escape: you and your inheritance keyholder, after a short waiting period (usually seven days), if your cosigner becomes unreachable. Path 3 is the failsafe: your cosigner and your inheritance keyholder, after a long waiting period (usually twelve months), if you cannot act at all.</p>
+        <p>Three spending paths, each with its own keys. Path 1 is the normal way your funds move: you and your cosigner, both signing, no delay. Path 2 is your sovereignty escape: you and your inheritance keyholder, if your cosigner becomes unreachable. It carries a one-block wait, which means your bitcoin can move this way as soon as it has confirmed once. Path 3 is the failsafe: your cosigner and your inheritance keyholder, after a long waiting period (usually twelve months), if you cannot act at all.</p>
+
+        <p>The one block on Path 2 is there for a practical reason. Liana, the wallet that recovers your vault without us, will not import a vault that has two no-delay paths. One block satisfies it and costs you nothing. Recovery in a wallet we do not control is a requirement we design around, not a feature we bolt on afterwards.</p>
 
         <p class="secondary">This is the spending-paths layer of how Musonius works. The rest of the security model lives on <a class="inline" href="security.html">the security page</a>.</p>
 
@@ -454,11 +482,11 @@
 
         <h3>The waiting periods</h3>
 
-        <p>Both shapes use one or two waiting-period values. You choose them when you set the vault up:</p>
+        <p>There is one waiting period you actually choose, and one that is fixed:</p>
 
         <ul>
-          <li><strong>The short wait.</strong> Default 7 days, anywhere from 3 to 30. Path 2 in the three-key shape uses it, when you need to spend without your cosigner.</li>
-          <li><strong>The long wait.</strong> Default 12 months. Both shapes allow 6 to 14 months. Path 3 in the three-key shape and Path 2 in the two-key shape both use it. This is the failsafe that opens when you can no longer act.</li>
+          <li><strong>The long wait.</strong> Default 12 months. Both shapes allow 6 to 14 months. Path 3 in the three-key shape and Path 2 in the two-key shape both use it. This is the failsafe that opens when you can no longer act, and it is the only wait that delays anything.</li>
+          <li><strong>The one-block wait.</strong> Fixed at one block, not a choice. Path 2 in the three-key shape uses it, for the recovery reason described above.</li>
         </ul>
 
         <p>Once you create a vault, these values become part of the script. No one can shorten them after the fact. Not you. Not us. Not anyone. That is the point. A waiting period that could be shortened later would not be a waiting period.</p>
@@ -526,6 +554,16 @@
           <li>An external paid audit by a security firm that specializes in Bitcoin software, focused on the parts that handle keys, scripts, and transactions.</li>
           <li>No real-money client vault is activated before that external audit completes.</li>
         </ul>
+
+        <p>That in-house review is not a single pass. We run adversarial reviews of our own code on a schedule. One reads the whole codebase for defects. The other attacks the custody core specifically: the descriptor, the waiting periods, the transaction builder, the signing paths, looking for any way to move funds that should not be possible.</p>
+
+        <ul>
+          <li><strong>The custody core held.</strong> No early spend, no way to redirect a signed transaction to a different address, no way to weaken a two-of-three at the script level. The waiting-period behaviour was confirmed on a live chain, not only argued on paper.</li>
+          <li><strong>The defects we found were in the coordination layer</strong>: invitations, sessions, database permissions. That is where a coordinator&rsquo;s risk concentrates, and ours was no exception.</li>
+          <li><strong>No real-money client vault has ever existed</strong>, which is the point of doing this work now rather than later.</li>
+        </ul>
+
+        <p>Reading code is not enough on its own. Two of the defects we cared most about were found by using the product rather than by reviewing it, so we walk every build by hand as well.</p>
 
         <p>What you can already check today, even before the code is open: <strong>the description of your vault itself.</strong> The format Musonius uses is the same format Liana and other Bitcoin tools already read. Anyone you trust (a developer friend, a Bitcoin-savvy advisor, a future tool you choose) can look at your vault&rsquo;s description and confirm it works the way Musonius says it does. The rules are a Bitcoin script. Nobody, including us, gets to interpret a Bitcoin script differently than the network does.</p>
 

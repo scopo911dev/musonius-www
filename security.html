@@ -10,6 +10,14 @@
     Q5    — Five-section structure: model -> bitcoin layers -> platform -> limits -> reporting.
   Voice discipline from the start (Session 67 lesson): no em-dashes, active voice,
   "we" allowed in active voice, plain-language openers, smart-non-technical-reader register.
+  Reconciliation (2026-08-12, non-dev): DEC-062 + its 2026-07-04 amendment. The
+    "two waiting periods" model is superseded. Path 2 (Owner + Inheritance) keeps
+    only a minimal older(1), present so Liana will import the descriptor, not as a
+    delay. The long failsafe is the only wait that delays anything. Rewrote the
+    three paragraphs under "The timelocks" accordingly. Do not reintroduce a short
+    / seven-day timelock here. NOTE: the separate seven-day wait in the account-
+    recovery section is a different mechanism (email + passkey loss) and is correct
+    as written. Sibling fix landed the same day in technical_stuff.html.
 -->
 <html lang="en">
 <head>
@@ -387,13 +395,13 @@
 
         <h3>The timelocks</h3>
 
-        <p>Your vault has two waiting periods written into its rules. A short one, typically seven days, for the path that lets you spend with your inheritance cosigner if your normal-path cosigner becomes unreachable. A long one, typically twelve months, for the failsafe path that opens if you or your key are unable to perform as primary keyholder. Once the vault is created, no one can shorten either period. Not you. Not us. Not anyone. The Bitcoin network enforces both.</p>
+        <p>Your vault has one waiting period that matters, written into its rules: the long failsafe, typically twelve months, guarding the path that opens if you are unable to act as primary keyholder. The path that lets you spend with your inheritance cosigner, when your normal-path cosigner becomes unreachable, has no meaningful wait. It needs your key, and a path that needs your key can never be used against you, so there is nothing to delay. Once the vault is created, no one can lengthen or shorten the failsafe. Not you. Not us. Not anyone. The Bitcoin network enforces it.</p>
 
-        <p>The waiting periods are friction on purpose. The normal path is the everyday way bitcoin moves out of your vault. The other two paths exist for the cases when something has gone wrong: a normal-path cosigner missing, an owner unable to act. They are slow because those cases are rare and serious. Two enforcers guard that window: the math, which makes an early spend impossible to fake, and the people, you and both your keyholders, alerted the moment a slow path begins, who make it impossible to hide. The slowness is not dead time. It is your time to notice and respond while it is happening.</p>
+        <p>The failsafe wait is friction on purpose. The normal path is the everyday way bitcoin moves out of your vault. The failsafe path exists for the case when you can no longer act at all, and it is slow because that case is rare and serious. Two enforcers guard that window: the math, which makes an early spend impossible to fake, and the people, you and both your keyholders, alerted the moment a slow path begins, who make it impossible to hide. The slowness is not dead time. It is your time to notice and respond while it is happening.</p>
 
-        <p>Both clocks reset every time you use the vault. Pay an invoice, send bitcoin to someone, or move bitcoin between your own addresses: each one is a fresh transaction confirmed on the Bitcoin network, and the waiting periods start over. Using the vault is the proof of life. The failsafe only matures when nothing has happened for the full configured period.</p>
+        <p>The clock resets every time you use the vault. Pay an invoice, send bitcoin to someone, or move bitcoin between your own addresses: each one is a fresh transaction confirmed on the Bitcoin network, and the waiting period starts over. Using the vault is the proof of life. The failsafe only matures when nothing has happened for the full configured period.</p>
 
-        <p>If a recovery-path transaction is signed and waiting to broadcast, you can still stop it. Spend the bitcoin yourself on the normal path with your normal-path cosigner before the wait completes. That spend consumes the inputs the recovery-path transaction was going to use, and the recovery-path transaction becomes invalid. The same mechanism works whether the pending transaction is on the short-wait path or the long failsafe.</p>
+        <p>If a recovery-path transaction is signed and waiting to broadcast, you can still stop it. Spend the bitcoin yourself on the normal path with your normal-path cosigner before the wait completes. That spend consumes the inputs the recovery-path transaction was going to use, and the recovery-path transaction becomes invalid. The same mechanism works for any pending transaction on a recovery path.</p>
 
         <p>The long wait and the reset together are the architectural answer to the question "how do we resist an attacker who has compromised one party and is waiting patiently?" The timelocks are the safety net under your custody, not a trapdoor under your feet.</p>
 
