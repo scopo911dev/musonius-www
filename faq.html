@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<!--
+  Musonius /faq - Prototype (Session 144 non-dev)
+  Purpose: the questions page. Stacked accordion per STYLE_GUIDE s7.
+
+  PATTERN: native <details>/<summary>. Multiple open at once is the STYLE_GUIDE
+    default (skim-readers want several answers visible) and is what <details>
+    does natively. No JavaScript.
+
+  SOURCING DISCIPLINE: every answer here is drawn from copy that already exists
+    and has been checked. Answers 1 to 3 come from
+    docs/website_copy/SHAPES_BENEFITS_TRADEOFFS.md (CORRECTED 2026-08-22 for
+    DEC-062). The rest are compressions of how_it_works.html and security.html.
+    Do not add an answer here that is not already true somewhere checked.
+
+  DEC-062: no short wait, no cooldown, no 7-day timer. Path 2 (you plus your
+    inheritance keyholder) is immediate. Never reintroduce a wait here.
+
+  NO notification claim anywhere on this page: BACKLOG #87 has not shipped.
+  NO cancel claim anywhere on this page: BACKLOG #122 is mid-repair, and
+    cancelling does not revoke an already-signed transaction.
+
+  This page is the ONLY home for these three shared answers. shapes.html links
+    here rather than repeating them. Two copies is how the source doc went stale.
+
+  Voice: no em-dashes, active voice, plain language.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Questions. Musonius Multisig Vault</title>
+  <meta name="description" content="Straight answers about Musonius vaults. Spending limits, why we will not hold a key for you, what happens if your cosigner disappears, and what happens if we shut down.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- Tokens ---------- */
+    :root {
+      --paper:        #F4EFE6;
+      --paper-deep:   #ECE5D8;
+      --ink:          #1A1714;
+      --ink-soft:     #4A443D;
+      --ink-mute:     #8A8276;
+      --rule:         #D9D1C0;
+      --oxblood:      #6B1F1A;
+      --oxblood-deep: #4A1612;
+      --font-serif:   'Cormorant Garamond', Georgia, serif;
+      --font-sans:    'Inter', system-ui, sans-serif;
+    }
+
+    /* ---------- Reset ---------- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+    /* ---------- Page ---------- */
+    body {
+      font-family: var(--font-sans);
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* ---------- Lockup ---------- */
+    header {
+      padding: 32px 48px;
+      display: flex;
+      justify-content: flex-start;
+    }
+    .lockup {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .lockup-mark { height: 26px; width: auto; flex-shrink: 0; }
+    .lockup-wordmark {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 32px;
+      letter-spacing: -0.012em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .lockup-rule {
+      width: 1px; height: 18px;
+      background: var(--rule);
+      margin: 0 6px;
+      align-self: center;
+    }
+    .lockup-tag {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--ink-mute);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ---------- Main ---------- */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 48px 96px;
+    }
+
+    .content {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    /* ---------- Page heading ---------- */
+    h1.page-title {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 56px;
+      letter-spacing: -0.018em;
+      line-height: 1.10;
+      color: var(--ink);
+      margin-bottom: 40px;
+    }
+
+    .page-figure {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin: 0 auto 96px;
+    }
+
+    /* ---------- Section ---------- */
+    section {
+      margin-bottom: 96px;
+    }
+    section:last-of-type { margin-bottom: 96px; }
+
+    section .eyebrow {
+      display: block;
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      margin-bottom: 16px;
+    }
+
+    section h2 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 40px;
+      letter-spacing: -0.012em;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 32px;
+    }
+
+    section h3 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 28px;
+      letter-spacing: -0.012em;
+      line-height: 1.20;
+      color: var(--ink);
+      margin-top: 48px;
+      margin-bottom: 20px;
+    }
+
+    section p {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+    section p.secondary {
+      color: var(--ink-soft);
+    }
+    section p:last-child {
+      margin-bottom: 0;
+    }
+
+    section strong {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 24px 0;
+    }
+    section ul li {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--ink);
+      padding-left: 28px;
+      position: relative;
+      margin-bottom: 16px;
+    }
+    section ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.75em;
+      width: 12px;
+      height: 1px;
+      background: var(--ink-mute);
+    }
+    section ul li:last-child { margin-bottom: 0; }
+
+    section a.inline {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      transition: color 140ms ease;
+    }
+    section a.inline:hover,
+    section a.inline:focus-visible {
+      color: var(--oxblood);
+      outline: none;
+    }
+
+    /* ---------- CTAs ---------- */
+    .closing {
+      margin-top: 96px;
+      padding-top: 64px;
+      border-top: 1px solid var(--rule);
+      text-align: center;
+    }
+    .closing p {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 24px;
+      color: var(--ink-soft);
+      margin-bottom: 40px;
+      line-height: 1.4;
+    }
+    .choices {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 18px;
+      padding: 16px 32px;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--ink);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition:
+        background-color 140ms ease,
+        color 140ms ease,
+        border-color 140ms ease,
+        transform 80ms ease;
+      min-width: 180px;
+      text-align: center;
+    }
+    .btn:hover,
+    .btn:focus-visible {
+      background: var(--oxblood);
+      color: var(--paper);
+      border-color: var(--oxblood);
+      outline: none;
+    }
+    .btn:active {
+      background: var(--oxblood-deep);
+      border-color: var(--oxblood-deep);
+      transform: translateY(1px);
+    }
+
+    /* ---------- Footer (rebuilt Session 144, STYLE_GUIDE s7) ---------- */
+    /* Was a single centred line linking Home and Contact only, while the site
+       had grown to nine pages reachable by guided flow alone. Now the three
+       columns s7 specifies, on paper-deep, with the small lockup bottom-left
+       and the copyright bottom-right. index.html deliberately KEEPS the old
+       centred one-liner: the homepage is a locked single-viewport surface with
+       no scroll, and a column footer would break it. */
+    footer {
+      background: var(--paper-deep);
+      padding: 64px 48px 32px;
+      font-family: var(--font-sans);
+    }
+    .footer-inner {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+    .footer-cols {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 48px;
+    }
+    .footer-cols h4 {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 1.3;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+    .footer-cols ul { list-style: none; padding: 0; margin: 0; }
+    .footer-cols li { margin-bottom: 12px; }
+    .footer-cols li:last-child { margin-bottom: 0; }
+    .footer-cols a {
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--ink-soft);
+      text-decoration: none;
+      transition: color 140ms ease;
+    }
+    .footer-cols a:hover,
+    .footer-cols a:focus-visible { color: var(--oxblood); outline: none; }
+    .footer-base {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 56px;
+      padding-top: 24px;
+      border-top: 1px solid var(--rule);
+    }
+    .footer-lockup {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink-mute);
+      text-decoration: none;
+      transition: color 140ms ease;
+    }
+    .footer-lockup:hover,
+    .footer-lockup:focus-visible { color: var(--oxblood); outline: none; }
+    .footer-lockup svg { height: 16px; width: auto; flex-shrink: 0; }
+    .footer-lockup span {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 1;
+    }
+    .footer-meta {
+      font-weight: 400;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      color: var(--ink-mute);
+      text-align: right;
+    }
+    .footer-dot { color: var(--rule); margin: 0 8px; display: inline-block; }
+
+    @media (max-width: 720px) {
+      footer { padding: 48px 24px 28px; }
+      .footer-cols { grid-template-columns: 1fr; gap: 36px; }
+      .footer-cols h4 { font-size: 17px; margin-bottom: 16px; }
+      .footer-base { margin-top: 40px; flex-direction: column; align-items: flex-start; }
+      .footer-meta { text-align: left; }
+    }
+
+    /* ---------- Mobile ---------- */
+    @media (max-width: 720px) {
+      header { padding: 24px; }
+      main { padding: 24px 24px 64px; }
+      h1.page-title { font-size: 40px; margin-bottom: 32px; }
+      .page-figure { margin: 0 auto 64px; }
+      section { margin-bottom: 80px; }
+      section h2 { font-size: 32px; margin-bottom: 24px; }
+      section h3 { font-size: 24px; margin-top: 40px; }
+      section p, section ul li { font-size: 17px; line-height: 1.6; }
+      .closing { margin-top: 64px; padding-top: 48px; }
+      .closing p { font-size: 20px; margin-bottom: 32px; }
+      .lockup-wordmark { font-size: 24px; }
+      .lockup-mark { height: 20px; }
+      .lockup-rule { height: 14px; margin: 0 4px; }
+      .lockup-tag { font-size: 10px; letter-spacing: 0.18em; }
+      .btn { font-size: 16px; padding: 14px 24px; min-width: 0; flex: 1 1 140px; }
+    }
+
+    @media (max-width: 380px) {
+      .lockup-tag { display: none; }
+      .lockup-rule { display: none; }
+    }
+
+    /* ---------- FAQ accordion (STYLE_GUIDE s7) ---------- */
+    .faq { margin: 0; }
+    .faq details {
+      border-bottom: 1px solid var(--rule);
+    }
+    .faq details:first-of-type {
+      border-top: 1px solid var(--rule);
+    }
+    .faq summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 24px 0;
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 1.45;
+      color: var(--ink);
+      transition: color 140ms ease;
+    }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary:hover,
+    .faq summary:focus-visible {
+      color: var(--oxblood);
+      outline: none;
+    }
+    .faq .chev {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      margin-top: 3px;
+      transition: transform 140ms ease;
+    }
+    .faq details[open] .chev { transform: rotate(180deg); }
+    .faq .answer {
+      padding: 0 44px 28px 0;
+    }
+    .faq .answer p {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--ink-soft);
+      margin-bottom: 20px;
+    }
+    .faq .answer p:last-child { margin-bottom: 0; }
+    .faq .answer strong { font-weight: 600; color: var(--ink); }
+    .faq .answer a {
+      color: var(--ink-soft);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      transition: color 140ms ease;
+    }
+    .faq .answer a:hover,
+    .faq .answer a:focus-visible { color: var(--oxblood); outline: none; }
+
+    @media (max-width: 720px) {
+      .faq summary { font-size: 17px; padding: 20px 0; gap: 16px; }
+      .faq .answer { padding: 0 32px 24px 0; }
+      .faq .answer p { font-size: 17px; line-height: 1.6; }
+    }
+  </style>
+<body>
+
+  <header>
+    <a class="lockup" href="index.html" aria-label="Musonius Multisig Vault, home">
+      <svg class="lockup-mark" viewBox="0 0 52 46" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <rect x="0" y="2" width="52" height="11" fill="currentColor"/>
+        <rect x="9" y="13" width="6" height="33" fill="currentColor"/>
+        <rect x="37" y="13" width="6" height="33" fill="currentColor"/>
+      </svg>
+      <span class="lockup-wordmark">Musonius</span>
+      <span class="lockup-rule" aria-hidden="true"></span>
+      <span class="lockup-tag">Multisig Vault</span>
+    </a>
+  </header>
+
+  <main>
+    <article class="content">
+
+      <h1 class="page-title">Questions.</h1>
+
+      <section>
+        <p class="secondary">If the answer to something here would be more comfortable if it were vaguer, we have tried to give you the uncomfortable version instead.</p>
+      </section>
+
+      <section class="faq">
+        <details>
+          <summary>
+            <span>Can I set a spending limit, so small amounts move instantly and large ones need approval?</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <div class="answer">
+          <p>Not as a rule inside a single vault. Bitcoin itself cannot enforce &ldquo;amounts under this figure need fewer signatures&rdquo;, so any product offering it is enforcing it in software, which means it can be turned off by whoever controls the software.</p>
+          <p>The clean way to get the same experience is two vaults. A small spending vault you can move from quickly, like cash in your pocket, and a protected savings vault holding the bulk, like a safe. You decide how much sits in the spending vault. Topping it up from savings goes through the full protection.</p>
+          <p>Keep the spending vault small, and keep it in proportion. It is only as protected as the keys that guard it.</p>
+          </div>
+        </details>
+        <details>
+          <summary>
+            <span>Why can't Musonius just hold a key for me, the way some platforms do?</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <div class="answer">
+          <p>Because the moment we hold a key that can move your bitcoin, we become a partial custodian of your funds. That is exactly the thing this product is built not to be.</p>
+          <p>It is not a promise we are making. There is no Musonius key in your vault, so there is no platform key to compromise, no override to subvert, and no internal policy that has to keep holding. We coordinate signatures between you and your keyholders. We never hold, generate, or see your keys.</p>
+          <p>If you want a professional in the arrangement, that role is filled by an independent party who holds their own key on their own device. Not by us.</p>
+          </div>
+        </details>
+        <details>
+          <summary>
+            <span>What happens if my cosigner disappears?</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <div class="answer">
+          <p>You are not stuck, and you do not have to wait. You spend with your inheritance keyholder instead, as soon as your bitcoin has confirmed once on the network.</p>
+          <p>That route exists deliberately, and it is the reason a cosigner is a check on your everyday spending rather than a veto over it. Because there is always a way around them, no single person can lock you out of your own bitcoin. <a href="shapes.html">The trade-off that comes with it is set out on the shapes page.</a></p>
+          </div>
+        </details>
+        <details>
+          <summary>
+            <span>What happens if Musonius shuts down?</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <div class="answer">
+          <p>Your bitcoin is still yours and still spendable. Your vault's rules live in the Bitcoin network, not on our servers, and none of the ways out depend on us being here.</p>
+          <p>At setup we give you a Sovereignty Backup Kit: a paper packet with your vault's descriptor, your public keys, and step by step instructions for recovering the vault using Liana, an open source wallet built by an independent team who have never heard of you. It is the documented, tested path, not an emergency fallback.</p>
+          <p>And if you simply want to leave while we are still here, you do not need our permission and you do not have to wait. Sign with your own key and your inheritance keyholder, and move on.</p>
+          </div>
+        </details>
+        <details>
+          <summary>
+            <span>Can you move my bitcoin? Can you freeze it?</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <div class="answer">
+          <p>No, to both, and for the same reason: we hold no key in your vault.</p>
+          <p>We cannot sign for anything in your vault, which means we cannot move your bitcoin. We also cannot stop a transaction your keyholders have decided to make, cannot seize your funds, and cannot be compelled to hand over something we do not have.</p>
+          <p>This is not a policy that a change of ownership or a court order could overturn. It is the structural absence of the thing that would make such a policy necessary.</p>
+          </div>
+        </details>
+        <details>
+          <summary>
+            <span>What if I lose my key?</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <div class="answer">
+          <p>This is what the long failsafe is for. If you lose your key, become incapacitated, or are no longer here, a recovery path opens after a long period of inactivity. Recovery needs two of your three keyholders, and neither of them is us.</p>
+          <p>The long delay is doing deliberate work. It gives legitimate parties time to coordinate, and it gives any wrongful attempt time to be noticed while there is still time to act.</p>
+          </div>
+        </details>
+        <details>
+          <summary>
+            <span>How long is the failsafe, and can it run down by accident?</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <div class="answer">
+          <p>It is set when the vault is created, typically somewhere between six and twelve months, and once the vault exists nobody can shorten or lengthen it. Not you, not us, not anyone. The Bitcoin network enforces it.</p>
+          <p>It does not run down while you are using the vault. Every transaction you confirm on the network starts the clock again, so ordinary use is what keeps the failsafe from maturing. Using the vault is the proof of life.</p>
+          <p>If a vault sits genuinely untouched for the full period, the failsafe matures. That is the mechanism working, not failing: it only ever opens because nothing has happened for a long time.</p>
+          </div>
+        </details>
+        <details>
+          <summary>
+            <span>What are you not telling me?</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <div class="answer">
+          <p>There are no perfect custody designs. Every arrangement trades sovereignty, convenience, recoverability, and resistance to attack against each other, and anybody selling you certainty is leaving something out.</p>
+          <p>Two limits worth stating plainly. If every one of your keys is lost at the same time, nothing survives. And if both of your non-owner keyholders coordinate against you for the full failsafe period, without you noticing and without you able to act, they can recover the funds. The delay is long and their independence makes it hard, but the rules do not strictly prevent it. We will not tell you they do.</p>
+          <p><a href="how_it_works.html">The rest of the honest part is on the how it works page.</a></p>
+          </div>
+        </details>
+      </section>
+
+      <div class="closing">
+        <p>Ask us something that is not here.</p>
+        <div class="choices">
+          <a class="btn" href="contact.html">Talk to us</a>
+          <a class="btn" href="shapes.html">Choosing your vault</a>
+        </div>
+      </div>
+
+    </article>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <nav class="footer-cols" aria-label="Footer">
+        <div>
+          <h4>The vault</h4>
+          <ul>
+            <li><a href="how_it_works.html">How it works</a></li>
+            <li><a href="shapes.html">Choosing your vault</a></li>
+            <li><a href="bitcoin_ira.html">Bitcoin IRAs</a></li>
+            <li><a href="faq.html" aria-current="page">Questions</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>The thinking</h4>
+          <ul>
+            <li><a href="security.html">Security</a></li>
+            <li><a href="technical_stuff.html">Technical details</a></li>
+            <li><a href="kerckhoffs.html">Kerckhoffs&rsquo;s principle</a></li>
+            <li><a href="origin.html">Origin</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Musonius</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="https://testapp.musonius.io">Open the app</a></li>
+          </ul>
+        </div>
+      </nav>
+      <div class="footer-base">
+        <a class="footer-lockup" href="index.html" aria-label="Musonius Multisig Vault, home">
+          <svg viewBox="0 0 52 46" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><rect x="0" y="2" width="52" height="11" fill="currentColor"/><rect x="9" y="13" width="6" height="33" fill="currentColor"/><rect x="37" y="13" width="6" height="33" fill="currentColor"/></svg>
+          <span>Musonius</span>
+        </a>
+        <p class="footer-meta">Open source<span class="footer-dot" aria-hidden="true">&middot;</span>Built by Scott Porter</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
