@@ -32,6 +32,9 @@
       --rule:         #D9D1C0;
       --oxblood:      #6B1F1A;
       --oxblood-deep: #4A1612;
+      --owner-key:    #0369A1;
+      --cosigner-key: #047857;
+      --inheritance-key: #7B5BA1;
       --font-serif:   'Cormorant Garamond', Georgia, serif;
       --font-sans:    'Inter', system-ui, sans-serif;
     }
@@ -161,12 +164,218 @@
       color: var(--ink);
     }
 
-    /* ---------- Diagram placeholder ---------- */
+    /* ---------- Hero illustration ---------- */
     .diagram-figure {
       display: block;
       width: 100%;
       height: auto;
       margin: 0 auto 96px;
+    }
+
+    /* ---------- Cumulative vault paths ---------- */
+    .vault-timeline {
+      width: min(1040px, calc(100vw - 64px));
+      margin: 48px 0 56px 50%;
+      transform: translateX(-50%);
+      padding: 40px;
+      background: var(--paper-deep);
+      border: 1px solid var(--rule);
+    }
+    .vault-timeline__heading {
+      max-width: 680px;
+      margin: 0 auto 24px;
+      text-align: center;
+    }
+    section .vault-timeline__heading h3 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 32px;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    section .vault-timeline__heading p {
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--ink-soft);
+      margin: 0;
+    }
+    .key-legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin-bottom: 34px;
+      font-size: 13px;
+      color: var(--ink-soft);
+    }
+    .key-legend span,
+    .path-keys {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .key-legend span { gap: 6px; }
+    .key-icon {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .key-owner { color: var(--owner-key); }
+    .key-cosigner { color: var(--cosigner-key); }
+    .key-inheritance { color: var(--inheritance-key); }
+    .timeline-flow {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr) 44px minmax(0, 1fr);
+      align-items: end;
+      gap: 12px;
+    }
+    .timeline-stage {
+      min-width: 0;
+      text-align: center;
+    }
+    .timeline-stage__time {
+      min-height: 58px;
+      margin-bottom: 18px;
+    }
+    .timeline-stage__time strong,
+    .timeline-stage__time span { display: block; }
+    .timeline-stage__time strong {
+      font-weight: 600;
+      font-size: 15px;
+      line-height: 1.35;
+    }
+    .timeline-stage__time span {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--ink-mute);
+    }
+    .path-stack {
+      min-height: 358px;
+      display: flex;
+      flex-direction: column-reverse;
+      justify-content: flex-start;
+      gap: 12px;
+    }
+    .path-block {
+      position: relative;
+      height: 78px;
+      flex: 0 0 78px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 15px 10px 10px;
+      background: #F7F3EC;
+      border: 1px solid #CFC5B4;
+      border-radius: 4px;
+    }
+    .path-block::before {
+      content: "";
+      position: absolute;
+      top: -7px;
+      left: 21%;
+      width: 15%;
+      height: 7px;
+      background: #F7F3EC;
+      border: 1px solid #CFC5B4;
+      border-bottom: 0;
+      border-radius: 3px 3px 0 0;
+      box-shadow: 40px 0 0 -1px #F7F3EC, 40px 0 0 0 #CFC5B4;
+    }
+    .path-block--owner-absent {
+      border: 3px solid var(--oxblood);
+      background: #FAEEE9;
+    }
+    .path-block--owner-absent::before {
+      background: #FAEEE9;
+      border-color: var(--oxblood);
+      border-bottom: 0;
+      box-shadow: 40px 0 0 -1px #FAEEE9, 40px 0 0 0 var(--oxblood);
+    }
+    .path-block strong,
+    .path-block span { display: block; }
+    .path-block strong {
+      font-size: 13px;
+      line-height: 1.3;
+      font-weight: 600;
+    }
+    .path-block > span:last-child {
+      margin-top: 3px;
+      font-size: 11px;
+      line-height: 1.25;
+      color: var(--ink-soft);
+    }
+    .path-keys {
+      position: absolute;
+      top: 8px;
+      left: 9px;
+    }
+    .path-keys .key-icon {
+      width: 15px;
+      height: 15px;
+    }
+    .timeline-arrow {
+      align-self: center;
+      margin-bottom: 130px;
+      text-align: center;
+      color: var(--ink-mute);
+    }
+    .timeline-arrow strong,
+    .timeline-arrow span { display: block; }
+    .timeline-arrow strong {
+      font-family: var(--font-serif);
+      font-size: 30px;
+      font-weight: 500;
+      line-height: 1;
+    }
+    .timeline-arrow span {
+      margin-top: 5px;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .timeline-reset {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 14px;
+      align-items: center;
+      margin-top: 32px;
+      padding: 18px 20px;
+      background: rgba(107, 31, 26, 0.055);
+      border-top: 1px solid var(--rule);
+    }
+    .timeline-reset__icon {
+      font-family: var(--font-serif);
+      font-size: 34px;
+      line-height: 1;
+      color: var(--oxblood);
+    }
+    .timeline-reset strong,
+    .timeline-reset span { display: block; }
+    .timeline-reset strong {
+      font-size: 14px;
+      line-height: 1.4;
+      font-weight: 600;
+    }
+    .timeline-reset span {
+      margin-top: 3px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--ink-soft);
+    }
+    section p.timeline-note {
+      margin: 16px 0 0;
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--ink-mute);
     }
 
     /* ---------- CTAs ---------- */
@@ -217,7 +426,6 @@
       color: var(--paper);
       border-color: var(--oxblood);
       outline: none;
-    }
     .btn:active {
       background: var(--oxblood-deep);
       border-color: var(--oxblood-deep);
@@ -320,6 +528,19 @@
       section h2 { font-size: 32px; margin-bottom: 24px; }
       section p { font-size: 17px; line-height: 1.6; }
       .diagram-figure { margin: 0 auto 64px; }
+      .vault-timeline {
+        width: calc(100vw - 32px);
+        margin-top: 40px;
+        margin-bottom: 48px;
+        padding: 28px 20px;
+      }
+      section .vault-timeline__heading h3 { font-size: 27px; }
+      .timeline-flow { grid-template-columns: 1fr; align-items: stretch; }
+      .path-stack { min-height: 0; }
+      .timeline-stage__time { min-height: 0; margin: 4px 0 18px; }
+      .timeline-arrow { margin: 4px 0 2px; }
+      .timeline-arrow strong { transform: rotate(90deg); }
+      .timeline-reset { grid-template-columns: 30px 1fr; padding: 16px; }
       .closing { margin-top: 64px; padding-top: 48px; }
       .closing p { font-size: 20px; margin-bottom: 32px; }
       .lockup-wordmark { font-size: 24px; }
@@ -378,11 +599,72 @@
 
         <p>The rule holds because the math is built to enforce it. Musonius the platform holds no keys — it cannot sign for anything in your vault, ever. There is no platform key to compromise, no override to subvert, no employee discipline that needs to hold. This is not policy — it is the structural absence of the thing that would make policy necessary.</p>
 
-        <p>The vault&rsquo;s rules, written into the Bitcoin blockchain when the vault is created, require your key on every path that can move funds while you are able to act. Your other keyholders cannot move funds between themselves while you are present. This is not a promise — it is the script.</p>
+        <figure class="vault-timeline" aria-labelledby="vault-timeline-title" aria-describedby="vault-timeline-description">
+          <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+            <symbol id="key-round" viewBox="0 0 24 24">
+              <circle cx="7.5" cy="15.5" r="5.5"></circle>
+              <path d="m21 2-9.6 9.6"></path>
+              <path d="m15.5 7.5 3 3L22 7l-3-3"></path>
+            </symbol>
+          </svg>
 
-        <p>The rule holds until you cannot act. If you lose your key, become incapacitated, or are no longer here, a third path opens after a long failsafe of inactivity — usually six to twelve months. Recovery requires two of your three keyholders, neither of whom is the platform. The long delay gives legitimate parties time to coordinate and gives any wrongful attempt time to be noticed. The structural independence of the keyholders — who, by design, are not related to one another — makes wrongful coordination logistically hard.</p>
+          <div class="vault-timeline__heading">
+            <h3 id="vault-timeline-title">What becomes possible over time</h3>
+            <p id="vault-timeline-description">Inactivity adds recovery paths. It never removes the paths you already have.</p>
+          </div>
 
-        <p class="secondary">Each key lives on its holder&rsquo;s own hardware signing device. The Sovereignty Backup Kit, generated at vault setup, lets you recover from your own vault using software we did not write. If Musonius is gone tomorrow, your vault still works. And if you simply want to leave while we are still here, you do not need our permission and you do not have to wait: sign with your own key and your inheritance keyholder, and move on. None of these mechanisms depend on us.</p>
+          <div class="key-legend" aria-label="Key colors">
+            <span><svg class="key-icon key-owner" aria-hidden="true"><use href="#key-round"></use></svg>Owner</span>
+            <span><svg class="key-icon key-cosigner" aria-hidden="true"><use href="#key-round"></use></svg>Cosigner</span>
+            <span><svg class="key-icon key-inheritance" aria-hidden="true"><use href="#key-round"></use></svg>Inheritance</span>
+          </div>
+
+          <div class="timeline-flow" aria-label="Cumulative spending paths over time">
+            <div class="timeline-stage">
+              <div class="timeline-stage__time"><strong>Owner is active</strong><span>Available immediately</span></div>
+              <div class="path-stack">
+                <div class="path-block"><span class="path-keys" aria-label="Owner and cosigner keys"><svg class="key-icon key-owner" aria-hidden="true"><use href="#key-round"></use></svg><svg class="key-icon key-cosigner" aria-hidden="true"><use href="#key-round"></use></svg></span><strong>Owner + Cosigner</strong><span>Normal spending</span></div>
+                <div class="path-block"><span class="path-keys" aria-label="Owner and inheritance keys"><svg class="key-icon key-owner" aria-hidden="true"><use href="#key-round"></use></svg><svg class="key-icon key-inheritance" aria-hidden="true"><use href="#key-round"></use></svg></span><strong>Owner + Inheritance</strong><span>Backup spending</span></div>
+              </div>
+            </div>
+
+            <div class="timeline-arrow" aria-hidden="true"><strong>&rarr;</strong><span>Inactivity</span></div>
+
+            <div class="timeline-stage">
+              <div class="timeline-stage__time"><strong>Owner Exit opens</strong><span>After 3&ndash;6 months of inactivity</span></div>
+              <div class="path-stack">
+                <div class="path-block"><span class="path-keys" aria-label="Owner and cosigner keys"><svg class="key-icon key-owner" aria-hidden="true"><use href="#key-round"></use></svg><svg class="key-icon key-cosigner" aria-hidden="true"><use href="#key-round"></use></svg></span><strong>Owner + Cosigner</strong><span>Still available</span></div>
+                <div class="path-block"><span class="path-keys" aria-label="Owner and inheritance keys"><svg class="key-icon key-owner" aria-hidden="true"><use href="#key-round"></use></svg><svg class="key-icon key-inheritance" aria-hidden="true"><use href="#key-round"></use></svg></span><strong>Owner + Inheritance</strong><span>Still available</span></div>
+                <div class="path-block"><span class="path-keys" aria-label="Owner key"><svg class="key-icon key-owner" aria-hidden="true"><use href="#key-round"></use></svg></span><strong>Owner Exit</strong><span>Move into a new vault</span></div>
+              </div>
+            </div>
+
+            <div class="timeline-arrow" aria-hidden="true"><strong>&rarr;</strong><span>Inactivity</span></div>
+
+            <div class="timeline-stage">
+              <div class="timeline-stage__time"><strong>Inheritance opens</strong><span>After 9&ndash;15 months of inactivity</span></div>
+              <div class="path-stack">
+                <div class="path-block"><span class="path-keys" aria-label="Owner and cosigner keys"><svg class="key-icon key-owner" aria-hidden="true"><use href="#key-round"></use></svg><svg class="key-icon key-cosigner" aria-hidden="true"><use href="#key-round"></use></svg></span><strong>Owner + Cosigner</strong><span>Still available</span></div>
+                <div class="path-block"><span class="path-keys" aria-label="Owner and inheritance keys"><svg class="key-icon key-owner" aria-hidden="true"><use href="#key-round"></use></svg><svg class="key-icon key-inheritance" aria-hidden="true"><use href="#key-round"></use></svg></span><strong>Owner + Inheritance</strong><span>Still available</span></div>
+                <div class="path-block"><span class="path-keys" aria-label="Owner key"><svg class="key-icon key-owner" aria-hidden="true"><use href="#key-round"></use></svg></span><strong>Owner Exit</strong><span>Still available</span></div>
+                <div class="path-block path-block--owner-absent"><span class="path-keys" aria-label="Cosigner and inheritance keys"><svg class="key-icon key-cosigner" aria-hidden="true"><use href="#key-round"></use></svg><svg class="key-icon key-inheritance" aria-hidden="true"><use href="#key-round"></use></svg></span><strong>Cosigner + Inheritance</strong><span>Owner-less recovery</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="timeline-reset">
+            <div class="timeline-reset__icon" aria-hidden="true">&#8634;</div>
+            <div><strong>Any owner-authorized on-chain spend rebuilds the first stack.</strong><span>The coins move, both inactivity waits restart, and the two dormant failsafe paths lock again.</span></div>
+          </div>
+
+          <p class="timeline-note">Musonius is not a key in any path. The same rules remain usable through the Sovereignty Backup Kit.</p>
+        </figure>
+
+        <p>The vault&rsquo;s rules are cumulative. During normal use, your signature and one of your keyholders are required. After a significant period of inactivity, you can use your owner key alone to migrate into a new vault if both keyholders are gone. Only after the longer period can your cosigner and inheritance keyholder recover without you. Until those waits mature, neither failsafe path can sign.</p>
+
+        <p>Any owner-authorized transaction resets the inactivity periods for every coin in the vault. A check-in does this by moving the full balance back into the vault. Paying even a nominal invoice or sending to another wallet does it too: the transaction rebuilds the remaining balance as fresh outputs, with fresh locks.</p>
+
+        <p class="secondary">Each key lives on its holder&rsquo;s own hardware signing device. The Sovereignty Backup Kit, generated at vault setup, lets you use these paths through software we did not write. If Musonius is gone tomorrow, your vault still works. If you want to leave while your inheritance keyholder is available, you can leave immediately with those two keys. If both keyholders are gone, Owner Exit becomes available only after its inactivity wait. None of these mechanisms depend on us.</p>
 
         <p>This page describes the three-key vault, which is what most people choose. There is also a simpler two-key version: you and one inheritance keyholder, with no cosigner. It is quicker to set up and it keeps the same failsafe recovery, but it makes a real trade. In the three-key vault, no single key can move your bitcoin. In the two-key vault, your own key spends on its own, so that one key carries the whole weight of everyday security. Choose it for simplicity, not for strength.</p>
       </section>
