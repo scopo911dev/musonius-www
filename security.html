@@ -7,17 +7,14 @@
     Q4 (a) — Closing CTAs: Open the app + How Musonius works.
     Note (2026-06-29): Reporting-an-issue section removed; all contact now routes
     through the Contact page (help@musonius.io). No security@ address in use.
-    Q5    — Five-section structure: model -> bitcoin layers -> platform -> limits -> reporting.
+    Q5    — Page structure: model -> bitcoin layers -> platform -> failure modes -> category -> limits.
   Voice discipline from the start (Session 67 lesson): no em-dashes, active voice,
   "we" allowed in active voice, plain-language openers, smart-non-technical-reader register.
-  Reconciliation (2026-08-12, non-dev): DEC-062 + its 2026-07-04 amendment. The
-    "two waiting periods" model is superseded. Path 2 (Owner + Inheritance) keeps
-    only a minimal older(1), present so Liana will import the descriptor, not as a
-    delay. The long failsafe is the only wait that delays anything. Rewrote the
-    three paragraphs under "The timelocks" accordingly. Do not reintroduce a short
-    / seven-day timelock here. NOTE: the separate seven-day wait in the account-
-    recovery section is a different mechanism (email + passkey loss) and is correct
-    as written. Sibling fix landed the same day in technical_stuff.html.
+  Reconciliation (2026-09-13): the four-path design adds Owner Exit, an owner-only
+    migration path after the shorter inactivity wait. Cosigner + Inheritance remains
+    the only owner-absent path and opens after the longer inactivity wait. The minimal
+    older(1) on Owner + Inheritance is still a compatibility detail, not a meaningful
+    delay. The separate seven-day account-recovery wait is unrelated and remains.
 -->
 <html lang="en">
 <head>
@@ -25,7 +22,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <title>Security. Musonius Multisig Vault</title>
-  <meta name="description" content="How Musonius is secured. What protects your bitcoin. What protects the platform. What we cannot protect against. How to report an issue.">
+  <meta name="description" content="How Musonius protects your bitcoin, handles keyholder and platform failures, and preserves independent recovery.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -40,6 +37,9 @@
       --rule:         #D9D1C0;
       --oxblood:      #6B1F1A;
       --oxblood-deep: #4A1612;
+      --owner-key:    #0369A1;
+      --cosigner-key: #047857;
+      --inheritance-key: #7B5BA1;
       --font-serif:   'Cormorant Garamond', Georgia, serif;
       --font-sans:    'Inter', system-ui, sans-serif;
     }
@@ -227,6 +227,140 @@
       outline: none;
     }
 
+    /* ---------- Failure-mode table ---------- */
+    .failure-table-panel {
+      width: min(1040px, calc(100vw - 64px));
+      margin: 40px 0 0 50%;
+      transform: translateX(-50%);
+      border: 1px solid var(--rule);
+      background: #FAF7F1;
+    }
+    .failure-table {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .failure-table th:nth-child(1) { width: 22%; }
+    .failure-table th:nth-child(2) { width: 26%; }
+    .failure-table th:nth-child(3) { width: 19%; }
+    .failure-table th:nth-child(4) { width: 33%; }
+    .failure-table thead { background: var(--ink); }
+    .failure-table th {
+      padding: 13px 15px;
+      color: var(--paper);
+      font-size: 11px;
+      line-height: 1.3;
+      font-weight: 500;
+      letter-spacing: .1em;
+      text-align: left;
+      text-transform: uppercase;
+    }
+    .failure-table td {
+      padding: 17px 15px;
+      vertical-align: top;
+      border-bottom: 1px solid var(--rule);
+    }
+    .failure-table tbody tr:last-child td { border-bottom: 0; }
+    .failure-table tbody tr:nth-child(even) td { background: rgba(236, 229, 216, .42); }
+    .failure-name,
+    .failure-path-title {
+      display: block;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .failure-detail {
+      display: block;
+      margin-top: 4px;
+      color: var(--ink-mute);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .failure-keyset {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 5px;
+    }
+    .failure-key-icon {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .failure-owner-key { color: var(--owner-key); }
+    .failure-cosigner-key { color: var(--cosigner-key); }
+    .failure-inheritance-key { color: var(--inheritance-key); }
+    .failure-wait {
+      display: block;
+      color: var(--oxblood);
+      font-size: 11px;
+      line-height: 1.35;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+    .failure-wait-detail {
+      display: block;
+      margin-top: 4px;
+      color: var(--ink-soft);
+      font-size: 12px;
+    }
+    .failure-owner-absent {
+      display: inline-block;
+      padding: 8px 10px;
+      border: 2px solid var(--oxblood);
+      background: #FAEEE9;
+    }
+    .failure-case + .failure-case {
+      margin-top: 13px;
+      padding-top: 13px;
+      border-top: 1px solid var(--rule);
+    }
+    .failure-case-label,
+    .failure-platform-note {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--ink-mute);
+      font-size: 11px;
+      line-height: 1.3;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+    .failure-platform-note { color: var(--oxblood); }
+    .failure-reset {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 13px;
+      align-items: center;
+      padding: 18px 20px;
+      background: var(--paper-deep);
+      border-top: 1px solid var(--rule);
+      border-left: 3px solid var(--oxblood);
+    }
+    .failure-reset-icon {
+      font-family: var(--font-serif);
+      color: var(--oxblood);
+      font-size: 31px;
+      line-height: 1;
+    }
+    .failure-reset strong,
+    .failure-reset span { display: block; }
+    .failure-reset strong { font-size: 13px; font-weight: 600; }
+    .failure-reset span {
+      margin-top: 3px;
+      color: var(--ink-soft);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
     /* ---------- CTAs ---------- */
     .closing {
       margin-top: 96px;
@@ -378,6 +512,49 @@
       section h2 { font-size: 32px; margin-bottom: 24px; }
       section h3 { font-size: 24px; margin-top: 40px; }
       section p, section ul li { font-size: 17px; line-height: 1.6; }
+      .failure-table-panel {
+        width: calc(100vw - 32px);
+        margin-top: 32px;
+        border: 0;
+        background: transparent;
+      }
+      .failure-table thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+      .failure-table,
+      .failure-table tbody,
+      .failure-table tr,
+      .failure-table td { display: block; width: 100%; }
+      .failure-table tbody tr {
+        margin-bottom: 14px;
+        background: #FAF7F1;
+        border: 1px solid var(--rule);
+      }
+      .failure-table tbody tr:nth-child(even) td { background: transparent; }
+      .failure-table td {
+        display: grid;
+        grid-template-columns: 112px minmax(0, 1fr);
+        gap: 14px;
+        padding: 11px 13px;
+        border-bottom: 1px solid var(--rule);
+      }
+      .failure-table td::before {
+        content: attr(data-label);
+        color: var(--ink-mute);
+        font-size: 10px;
+        line-height: 1.4;
+        font-weight: 600;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+      .failure-table tbody tr:last-child td { border-bottom: 1px solid var(--rule); }
+      .failure-table tbody tr td:last-child { border-bottom: 0; }
+      .failure-reset { margin-top: 14px; }
       .closing { margin-top: 64px; padding-top: 48px; }
       .closing p { font-size: 20px; margin-bottom: 32px; }
       .lockup-wordmark { font-size: 24px; }
@@ -390,6 +567,7 @@
     @media (max-width: 380px) {
       .lockup-tag { display: none; }
       .lockup-rule { display: none; }
+      .failure-table td { grid-template-columns: 1fr; gap: 4px; }
     }
   </style>
 </head>
@@ -450,19 +628,19 @@
 
         <p>Your two cosigners cannot combine their keys to spend on the normal path. Their combined power only opens after the long failsafe completes, set by you and enforced by the Bitcoin network. A quiet alliance between those two is not a quiet alliance. The failsafe gives you months of warning, not days.</p>
 
-        <p>A compromise of any single key, whether yours or one of your cosigners&rsquo;, is not a loss event. It is a "use the remaining good keys to migrate to a new vault" event. The math on the blockchain enforces this. Not us.</p>
+        <p>A compromise of any single key is not automatically a loss event. If a support key is compromised, you use your owner key and the other support key to migrate immediately. If your owner device is lost but your seed phrase is safe, you recreate the same owner key and migrate immediately with either support key. If the owner key cannot be recovered, the two support keyholders migrate after the long inactivity wait. Recreating a compromised owner key does not make it safe again; the destination must be a new vault with a new owner key.</p>
 
         <h3>The timelocks</h3>
 
-        <p>Your vault has one waiting period that matters, written into its rules: the long failsafe, typically twelve months, guarding the path that opens if you are unable to act as primary keyholder. The path that lets you spend with your inheritance cosigner, when your normal-path cosigner becomes unreachable, has no meaningful wait. It needs your key, and a path that needs your key can never be used against you, so there is nothing to delay. Once the vault is created, no one can lengthen or shorten the failsafe. Not you. Not us. Not anyone. The Bitcoin network enforces it.</p>
+        <p>Your vault has two meaningful waiting periods, both written into its rules. After the shorter period, typically three to six months of inactivity, Owner Exit opens: your owner key alone can migrate the funds into a new vault if both support keyholders have disappeared. After the longer period, typically nine to fifteen months of inactivity, Cosigner + Inheritance opens: the two support keyholders can recover without the owner. Owner + Cosigner and Owner + Inheritance remain available throughout. Time adds recovery options; it never removes the normal ones.</p>
 
-        <p>The failsafe wait is friction on purpose. The normal path is the everyday way bitcoin moves out of your vault. The failsafe path exists for the case when you can no longer act at all, and it is slow because that case is rare and serious. Two enforcers guard that window: the math, which makes an early spend impossible to fake, and the people, you and both your keyholders, alerted the moment a slow path begins, who make it impossible to hide. The slowness is not dead time. It is your time to notice and respond while it is happening.</p>
+        <p>Both waits are friction on purpose. Owner Exit protects against the simultaneous loss of both support relationships without turning the owner key into an everyday single point of failure. The longer inheritance wait protects the owner from a quiet alliance between the two support keyholders. The math makes either early spend impossible, and the long windows give legitimate parties time to notice and respond.</p>
 
-        <p>The clock resets every time you use the vault. Pay an invoice, send bitcoin to someone, or move bitcoin between your own addresses: each one is a fresh transaction confirmed on the Bitcoin network, and the waiting period starts over. Using the vault is the proof of life. The failsafe only matures when nothing has happened for the full configured period.</p>
+        <p>Both clocks reset whenever the owner uses the vault. A check-in moves the full balance back into the vault. Paying an invoice or sending bitcoin to another wallet also rebuilds the remaining balance as fresh outputs. In every case, all coins receive fresh locks and both inactivity periods restart. Normal owner activity is the proof of life that keeps the failsafe paths dormant.</p>
 
         <p>If a recovery-path transaction is signed and waiting to broadcast, you can still stop it. Spend the bitcoin yourself on the normal path with your normal-path cosigner before the wait completes. That spend consumes the inputs the recovery-path transaction was going to use, and the recovery-path transaction becomes invalid. The same mechanism works for any pending transaction on a recovery path.</p>
 
-        <p>The long wait and the reset together are the architectural answer to the question "how do we resist an attacker who has compromised one party and is waiting patiently?" The timelocks are the safety net under your custody, not a trapdoor under your feet.</p>
+        <p>The two waits and the reset together are the architectural answer to the question "how do we resist an attacker who has compromised one party and is waiting patiently?" The timelocks are the safety net under your custody, not a trapdoor under your feet.</p>
 
         <h3>The independence of your keyholders</h3>
 
@@ -487,6 +665,66 @@
           <li><strong>Your recovery path runs through Liana, independent of us.</strong> Liana is a Bitcoin wallet built by a different team in a different country. It reads your vault&rsquo;s description directly and produces transactions any of your keyholders can sign with their hardware device. A platform compromise would be a notification-and-coordination outage. It would not move a satoshi.</li>
           <li><strong>Even a complete platform compromise reveals only watchable information.</strong> An attacker who took over the platform tomorrow would learn what your vault looks like, who your keyholders&rsquo; email addresses are, and what transactions are mid-flight. They would not learn anything that could move your bitcoin. The signing keys do not live here.</li>
         </ul>
+      </section>
+
+      <section id="failure-modes">
+        <span class="eyebrow">Failure modes</span>
+        <h2>When something fails.</h2>
+
+        <p>Each failure has a defined response. The available keys determine the path; inactivity determines when the two failsafe paths become available.</p>
+
+        <div class="failure-table-panel">
+          <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+            <symbol id="failure-key-round" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="5.5"></circle><path d="m21 2-9.6 9.6"></path><path d="m15.5 7.5 3 3L22 7l-3-3"></path></symbol>
+          </svg>
+          <table class="failure-table" aria-label="Musonius failure modes and recovery responses">
+            <thead>
+              <tr><th scope="col">What failed</th><th scope="col">Available path</th><th scope="col">Timing</th><th scope="col">What can be done</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="What failed"><span class="failure-name">Cosigner unavailable</span><span class="failure-detail">Lost, unresponsive, or no longer willing</span></td>
+                <td data-label="Available path"><span class="failure-keyset"><svg class="failure-key-icon failure-owner-key" aria-hidden="true"><use href="#failure-key-round"></use></svg><svg class="failure-key-icon failure-inheritance-key" aria-hidden="true"><use href="#failure-key-round"></use></svg></span><span class="failure-path-title">Owner + Inheritance</span></td>
+                <td data-label="Timing"><span class="failure-wait">No wait</span><span class="failure-wait-detail">Available immediately</span></td>
+                <td data-label="What can be done">Continue spending or migrate to a replacement vault.</td>
+              </tr>
+              <tr>
+                <td data-label="What failed"><span class="failure-name">Inheritance unavailable</span><span class="failure-detail">Lost, unresponsive, or no longer suitable</span></td>
+                <td data-label="Available path"><span class="failure-keyset"><svg class="failure-key-icon failure-owner-key" aria-hidden="true"><use href="#failure-key-round"></use></svg><svg class="failure-key-icon failure-cosigner-key" aria-hidden="true"><use href="#failure-key-round"></use></svg></span><span class="failure-path-title">Owner + Cosigner</span></td>
+                <td data-label="Timing"><span class="failure-wait">No wait</span><span class="failure-wait-detail">Available immediately</span></td>
+                <td data-label="What can be done">Continue normal spending and migrate when ready.</td>
+              </tr>
+              <tr>
+                <td data-label="What failed"><span class="failure-name">Both support keyholders unavailable</span><span class="failure-detail">Owner still has one good key</span></td>
+                <td data-label="Available path"><span class="failure-keyset"><svg class="failure-key-icon failure-owner-key" aria-hidden="true"><use href="#failure-key-round"></use></svg></span><span class="failure-path-title">Owner Exit</span></td>
+                <td data-label="Timing"><span class="failure-wait">3–6 months</span><span class="failure-wait-detail">Of inactivity</span></td>
+                <td data-label="What can be done">Owner alone migrates all funds into a new vault.</td>
+              </tr>
+              <tr>
+                <td data-label="What failed"><span class="failure-name">Owner key compromised</span><span class="failure-detail">Device lost or the key may be exposed</span></td>
+                <td data-label="Available path">
+                  <div class="failure-case"><span class="failure-case-label">Seed phrase available</span><span class="failure-keyset"><svg class="failure-key-icon failure-owner-key" aria-hidden="true"><use href="#failure-key-round"></use></svg><svg class="failure-key-icon failure-cosigner-key" aria-hidden="true"><use href="#failure-key-round"></use></svg> or <svg class="failure-key-icon failure-owner-key" aria-hidden="true"><use href="#failure-key-round"></use></svg><svg class="failure-key-icon failure-inheritance-key" aria-hidden="true"><use href="#failure-key-round"></use></svg></span><span class="failure-path-title">Restore + support key</span></div>
+                  <div class="failure-case"><span class="failure-case-label">Owner key unrecoverable</span><span class="failure-owner-absent"><span class="failure-keyset"><svg class="failure-key-icon failure-cosigner-key" aria-hidden="true"><use href="#failure-key-round"></use></svg><svg class="failure-key-icon failure-inheritance-key" aria-hidden="true"><use href="#failure-key-round"></use></svg></span><span class="failure-path-title">Cosigner + Inheritance</span></span></div>
+                </td>
+                <td data-label="Timing"><div class="failure-case"><span class="failure-wait">No wait</span><span class="failure-wait-detail">Restore and migrate immediately</span></div><div class="failure-case"><span class="failure-wait">9–15 months</span><span class="failure-wait-detail">Of inactivity</span></div></td>
+                <td data-label="What can be done"><div class="failure-case">Restore the owner key from the seed phrase, then use either support key to move into a new vault.</div><div class="failure-case">If the owner key cannot be recovered, the two support keyholders migrate without it after the long wait.</div></td>
+              </tr>
+              <tr>
+                <td data-label="What failed"><span class="failure-name">Owner unavailable</span><span class="failure-detail">Incapacity or death</span></td>
+                <td data-label="Available path"><span class="failure-owner-absent"><span class="failure-keyset"><svg class="failure-key-icon failure-cosigner-key" aria-hidden="true"><use href="#failure-key-round"></use></svg><svg class="failure-key-icon failure-inheritance-key" aria-hidden="true"><use href="#failure-key-round"></use></svg></span><span class="failure-path-title">Cosigner + Inheritance</span></span></td>
+                <td data-label="Timing"><span class="failure-wait">9–15 months</span><span class="failure-wait-detail">Of inactivity</span></td>
+                <td data-label="What can be done">Complete the only owner-absent recovery or inheritance spend.</td>
+              </tr>
+              <tr>
+                <td data-label="What failed"><span class="failure-name">Musonius unavailable</span><span class="failure-detail">Service outage or company gone</span></td>
+                <td data-label="Available path"><span class="failure-platform-note">There are no platform keys</span><span class="failure-path-title">Use the same key path</span></td>
+                <td data-label="Timing"><span class="failure-wait">Unchanged</span><span class="failure-wait-detail">The same timing rules apply</span></td>
+                <td data-label="What can be done">Open the Sovereignty Backup Kit in another signing interface and recover with the same keys.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="failure-reset"><div class="failure-reset-icon" aria-hidden="true">↺</div><div><strong>Owner activity keeps both failsafes locked.</strong><span>A check-in, invoice payment, or wallet transfer rebuilds all coins and restarts both inactivity periods.</span></div></div>
+        </div>
       </section>
 
       <section>
@@ -515,7 +753,7 @@
 
         <p>We name these on purpose. A security page that lists what it cannot protect against is more useful than one that does not.</p>
 
-        <p class="secondary">A perfect-custody product would either hold your keys for you, which trades self-sovereignty for resilience, or require so many keys and parties that nobody would set it up. The three-path, two-timelock design is the trade-off curve&rsquo;s sweet spot for the kind of owner Musonius is built for. Enough resilience that ordinary failures do not matter. The owner cryptographically in charge throughout.</p>
+        <p class="secondary">A perfect-custody product would either hold your keys for you, which trades self-sovereignty for resilience, or require so many keys and parties that nobody would set it up. The four-path, two-timelock design is the trade-off curve&rsquo;s sweet spot for the kind of owner Musonius is built for. Enough resilience that ordinary failures do not matter. The owner cryptographically in charge throughout.</p>
       </section>
 
       <div class="closing">

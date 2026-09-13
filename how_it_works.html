@@ -8,7 +8,8 @@
     Q4 (a) — Closing CTAs: Open the app + Read the security paper
     Q5 (a) — Same shell as homepage (lockup, footer, ghost buttons w/ oxblood-on-hover)
   Structure: Shape A (tight, 4 sections).
-  Source material: docs/HOW_IT_WORKS.md (full reference) + DEC-022 (non-association) + DEC-030 (three-path).
+  Source material: docs/HOW_IT_WORKS.md (full reference) + DEC-022 (non-association),
+  updated for the four-path inactivity model on 2026-09-13.
   Per Scott's instruction: no enumeration of the current three shapes; describe the model abstractly.
 -->
 <html lang="en">
@@ -377,6 +378,20 @@
       line-height: 1.5;
       color: var(--ink-mute);
     }
+    section p.timeline-followup {
+      margin: -32px 0 48px;
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .timeline-followup a {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 140ms ease;
+    }
+    .timeline-followup a:hover,
+    .timeline-followup a:focus-visible { color: var(--oxblood); outline: none; }
 
     /* ---------- CTAs ---------- */
     .closing {
@@ -541,6 +556,7 @@
       .timeline-arrow { margin: 4px 0 2px; }
       .timeline-arrow strong { transform: rotate(90deg); }
       .timeline-reset { grid-template-columns: 30px 1fr; padding: 16px; }
+      section p.timeline-followup { margin-top: -24px; margin-bottom: 40px; }
       .closing { margin-top: 64px; padding-top: 48px; }
       .closing p { font-size: 20px; margin-bottom: 32px; }
       .lockup-wordmark { font-size: 24px; }
@@ -659,6 +675,8 @@
 
           <p class="timeline-note">Musonius is not a key in any path. The same rules remain usable through the Sovereignty Backup Kit.</p>
         </figure>
+
+        <p class="timeline-followup"><a href="security.html#failure-modes">What happens when a key, or Musonius itself, fails? See the failure-mode table &rarr;</a></p>
 
         <p>The vault&rsquo;s rules are cumulative. During normal use, your signature and one of your keyholders are required. After a significant period of inactivity, you can use your owner key alone to migrate into a new vault if both keyholders are gone. Only after the longer period can your cosigner and inheritance keyholder recover without you. Until those waits mature, neither failsafe path can sign.</p>
 
