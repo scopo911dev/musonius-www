@@ -610,13 +610,15 @@
         <span class="eyebrow">Your bitcoin</span>
         <h2>What protects your bitcoin.</h2>
 
-        <p>Four layers protect the bitcoin in your vault. Each one is independent of the others. A breach of any single layer is a delay, not a loss.</p>
+        <p>Four different layers answer four different questions: who may authorize a spend, whether each signer can recover, how each signer is protected, and whether the right people can coordinate without depending on Musonius. They support one another, but they are not interchangeable.</p>
 
         <h3>Your hardware signing device</h3>
 
         <p>Your private key lives inside the secure chip of a hardware device that you physically hold. The key never leaves the chip. Every transaction that moves your bitcoin is approved on the device&rsquo;s own small screen, with a physical button press. The device shows you the destination address and the amount before you press. Nothing about that approval flows through a screen we control.</p>
 
         <p>Devices can be lost, stolen, or destroyed. Your protection against that is the 12 or 24 words you write down at setup, called the seed phrase. Stored offline somewhere only you can reach, those words let you recreate the same key on a new device. We never see those words. They never touch the internet.</p>
+
+        <p>That backup recovers one signing authority; it does not create another one. Every keyholder needs their own tested restore procedure. Multisig cannot compensate for three signers whose backups have never been checked.</p>
 
         <p>If you lose both the device and the seed phrase, you can no longer sign for your vault. Your bitcoin is still safe. Without your signature, only the long failsafe path can move it, and only after the full long wait you set. During that wait, no one can spend your bitcoin. After the wait, your two cosigners recover the vault using Liana and the Sovereignty Backup Kit.</p>
 
@@ -630,6 +632,8 @@
 
         <p>A compromise of any single key is not automatically a loss event. If a support key is compromised, you use your owner key and the other support key to migrate immediately. If your owner device is lost but your seed phrase is safe, you recreate the same owner key and migrate immediately with either support key. If the owner key cannot be recovered, the two support keyholders migrate after the long inactivity wait. Recreating a compromised owner key does not make it safe again; the destination must be a new vault with a new owner key.</p>
 
+        <p>Device diversity addresses one narrow risk: the same entropy or firmware failure affecting more than one signer. It does not make complexity free, and two vendor names do not prove every spending path is cross-vendor. Musonius evaluates the actual pair of signers on each path and treats the remaining same-vendor recovery path as a risk that must stay timelocked while the owner is active.</p>
+
         <h3>The timelocks</h3>
 
         <p>Your vault has two meaningful waiting periods, both written into its rules. After the shorter period, typically three to six months of inactivity, Owner Exit opens: your owner key alone can migrate the funds into a new vault if both support keyholders have disappeared. After the longer period, typically nine to fifteen months of inactivity, Cosigner + Inheritance opens: the two support keyholders can recover without the owner. Owner + Cosigner and Owner + Inheritance remain available throughout. Time adds recovery options; it never removes the normal ones.</p>
@@ -641,6 +645,8 @@
         <p>If a recovery-path transaction is signed and waiting to broadcast, you can still stop it. Spend the bitcoin yourself on the normal path with your normal-path cosigner before the wait completes. That spend consumes the inputs the recovery-path transaction was going to use, and the recovery-path transaction becomes invalid. The same mechanism works for any pending transaction on a recovery path.</p>
 
         <p>The two waits and the reset together are the architectural answer to the question "how do we resist an attacker who has compromised one party and is waiting patiently?" The timelocks are the safety net under your custody, not a trapdoor under your feet.</p>
+
+        <p>Setup day is not the finish line. Keyholders, backups, devices, contact details, and coin ages all change. A maintained vault periodically proves that its signers can recover, its intended paths can sign, and its Sovereignty Backup Kit still reconstructs the vault independently. An unmaintained multisig can be more dangerous than a well-maintained single-sig.</p>
 
         <h3>The independence of your keyholders</h3>
 
