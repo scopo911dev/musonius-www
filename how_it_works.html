@@ -173,6 +173,25 @@
       margin: 0 auto 96px;
     }
 
+    /* ---------- Intro video ---------- */
+    .intro-video {
+      margin: 0 0 72px;
+    }
+    .intro-video video {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      background: var(--paper-deep);
+      border: 1px solid var(--rule);
+    }
+    .intro-video figcaption {
+      margin-top: 12px;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      color: var(--ink-mute);
+    }
+
     /* ---------- Cumulative vault paths ---------- */
     .vault-timeline {
       width: min(1040px, calc(100vw - 64px));
@@ -543,6 +562,7 @@
       section h2 { font-size: 32px; margin-bottom: 24px; }
       section p { font-size: 17px; line-height: 1.6; }
       .diagram-figure { margin: 0 auto 64px; }
+      .intro-video { margin-bottom: 48px; }
       .vault-timeline {
         width: calc(100vw - 32px);
         margin-top: 40px;
@@ -596,7 +616,13 @@
         A Bitcoin security solution. Sovereign by design. Built to outlast you.
       </p>
 
-      <img class="diagram-figure" src="three-man-walking.jpg" alt="A graphite sketch of three men crossing an open field: two walking together in the foreground and a third figure alone in the distance, in the same contemplative register as the other Musonius illustrations.">
+      <figure class="intro-video">
+        <video controls preload="none" playsinline poster="musonius-intro.jpg" width="1920" height="1080">
+          <source src="musonius-intro.mp4" type="video/mp4">
+          <a href="musonius-intro.mp4">Watch the 30-second introduction</a>.
+        </video>
+        <figcaption>Musonius in 30 seconds. Subtitled, so it works with the sound off.</figcaption>
+      </figure>
 
       <section>
         <h2>Why this exists.</h2>
@@ -607,6 +633,8 @@
         <p>Ask any of them two questions: What happens when I want to leave? What happens when you can&rsquo;t help me? If the answer to either requires the provider&rsquo;s active participation &mdash; they must co-sign your exit, or their infrastructure must be running for recovery to work &mdash; you do not have self-custody. You have custody at the company&rsquo;s pleasure.</p>
         <p>That is the gap Musonius is built to close.</p>
       </section>
+
+      <img class="diagram-figure" src="three-man-walking.jpg" alt="A graphite sketch of three men crossing an open field: two walking together in the foreground and a third figure alone in the distance, in the same contemplative register as the other Musonius illustrations.">
 
       <section>
         <h2>How Musonius answers it.</h2>
