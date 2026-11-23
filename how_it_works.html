@@ -194,6 +194,32 @@
       color: var(--ink-mute);
     }
 
+    /* ---------- Vault-paths video (replaces the .vault-timeline diagram below, kept for reuse) ---------- */
+    .paths-video {
+      width: min(1040px, calc(100vw - 64px));
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      margin: 56px 0 64px;
+    }
+    .paths-video video {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      background: var(--paper-deep);
+      border: 1px solid var(--rule);
+    }
+    .paths-video figcaption {
+      max-width: 720px;
+      margin: 14px auto 0;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--ink-mute);
+    }
+    .paths-video figcaption strong { color: var(--ink-soft); font-weight: 600; }
+
     /* ---------- Cumulative vault paths ---------- */
     .vault-timeline {
       width: min(1040px, calc(100vw - 64px));
@@ -566,6 +592,7 @@
       section p { font-size: 17px; line-height: 1.6; }
       .diagram-figure { margin: 0 auto 64px; }
       .intro-video { margin-bottom: 48px; }
+      .paths-video { width: calc(100vw - 32px); margin: 40px 0 48px; }
       .vault-timeline {
         width: calc(100vw - 32px);
         margin-top: 40px;
@@ -646,65 +673,12 @@
 
         <p>The rule holds because the math is built to enforce it. Musonius the platform holds no keys — it cannot sign for anything in your vault, ever. There is no platform key to compromise, no override to subvert, no employee discipline that needs to hold. This is not policy — it is the structural absence of the thing that would make policy necessary.</p>
 
-        <figure class="vault-timeline" aria-labelledby="vault-timeline-title" aria-describedby="vault-timeline-description">
-          <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
-            <symbol id="key-round" viewBox="0 0 24 24">
-              <circle cx="7.5" cy="15.5" r="5.5"></circle>
-              <path d="m21 2-9.6 9.6"></path>
-              <path d="m15.5 7.5 3 3L22 7l-3-3"></path>
-            </symbol>
-          </svg>
-
-          <div class="vault-timeline__heading">
-            <h3 id="vault-timeline-title">What becomes possible over time</h3>
-            <p id="vault-timeline-description">Inactivity adds recovery paths. It never removes the paths you already have.</p>
-          </div>
-
-          <div class="key-legend" aria-label="Key colors">
-            <span><svg class="key-icon key-owner" aria-hidden="true"><use href="#key-round"></use></svg>Owner</span>
-            <span><svg class="key-icon key-cosigner" aria-hidden="true"><use href="#key-round"></use></svg>Cosigner</span>
-            <span><svg class="key-icon key-inheritance" aria-hidden="true"><use href="#key-round"></use></svg>Inheritance</span>
-          </div>
-
-          <div class="timeline-flow" aria-label="Cumulative spending paths over time">
-            <div class="timeline-stage">
-              <div class="timeline-stage__time"><strong>Owner is active</strong><span>Available immediately</span></div>
-              <div class="path-stack">
-                <div class="path-block"><span class="path-keys" aria-label="Owner and cosigner keys"><svg class="key-icon key-owner" aria-hidden="true"><use href="#key-round"></use></svg><svg class="key-icon key-cosigner" aria-hidden="true"><use href="#key-round"></use></svg></span><strong>Owner + Cosigner</strong><span>Normal spending</span></div>
-                <div class="path-block"><span class="path-keys" aria-label="Owner and inheritance keys"><svg class="key-icon key-owner" aria-hidden="true"><use href="#key-round"></use></svg><svg class="key-icon key-inheritance" aria-hidden="true"><use href="#key-round"></use></svg></span><strong>Owner + Inheritance</strong><span>Backup spending</span></div>
-              </div>
-            </div>
-
-            <div class="timeline-arrow" aria-hidden="true"><strong>&rarr;</strong><span>Inactivity</span></div>
-
-            <div class="timeline-stage">
-              <div class="timeline-stage__time"><strong>Owner Exit opens</strong><span>After 3&ndash;6 months of inactivity</span></div>
-              <div class="path-stack">
-                <div class="path-block"><span class="path-keys" aria-label="Owner and cosigner keys"><svg class="key-icon key-owner" aria-hidden="true"><use href="#key-round"></use></svg><svg class="key-icon key-cosigner" aria-hidden="true"><use href="#key-round"></use></svg></span><strong>Owner + Cosigner</strong><span>Still available</span></div>
-                <div class="path-block"><span class="path-keys" aria-label="Owner and inheritance keys"><svg class="key-icon key-owner" aria-hidden="true"><use href="#key-round"></use></svg><svg class="key-icon key-inheritance" aria-hidden="true"><use href="#key-round"></use></svg></span><strong>Owner + Inheritance</strong><span>Still available</span></div>
-                <div class="path-block"><span class="path-keys" aria-label="Owner key"><svg class="key-icon key-owner" aria-hidden="true"><use href="#key-round"></use></svg></span><strong>Owner Exit</strong><span>Move into a new vault</span></div>
-              </div>
-            </div>
-
-            <div class="timeline-arrow" aria-hidden="true"><strong>&rarr;</strong><span>Inactivity</span></div>
-
-            <div class="timeline-stage">
-              <div class="timeline-stage__time"><strong>Inheritance opens</strong><span>After 9&ndash;15 months of inactivity</span></div>
-              <div class="path-stack">
-                <div class="path-block"><span class="path-keys" aria-label="Owner and cosigner keys"><svg class="key-icon key-owner" aria-hidden="true"><use href="#key-round"></use></svg><svg class="key-icon key-cosigner" aria-hidden="true"><use href="#key-round"></use></svg></span><strong>Owner + Cosigner</strong><span>Still available</span></div>
-                <div class="path-block"><span class="path-keys" aria-label="Owner and inheritance keys"><svg class="key-icon key-owner" aria-hidden="true"><use href="#key-round"></use></svg><svg class="key-icon key-inheritance" aria-hidden="true"><use href="#key-round"></use></svg></span><strong>Owner + Inheritance</strong><span>Still available</span></div>
-                <div class="path-block"><span class="path-keys" aria-label="Owner key"><svg class="key-icon key-owner" aria-hidden="true"><use href="#key-round"></use></svg></span><strong>Owner Exit</strong><span>Still available</span></div>
-                <div class="path-block path-block--owner-absent"><span class="path-keys" aria-label="Cosigner and inheritance keys"><svg class="key-icon key-cosigner" aria-hidden="true"><use href="#key-round"></use></svg><svg class="key-icon key-inheritance" aria-hidden="true"><use href="#key-round"></use></svg></span><strong>Cosigner + Inheritance</strong><span>Owner-less recovery</span></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="timeline-reset">
-            <div class="timeline-reset__icon" aria-hidden="true">&#8634;</div>
-            <div><strong>Any owner-authorized on-chain spend rebuilds the first stack.</strong><span>The coins move, both inactivity waits restart, and the two dormant failsafe paths lock again.</span></div>
-          </div>
-
-          <p class="timeline-note">Musonius is not a key in any path. The same rules remain usable through the Sovereignty Backup Kit.</p>
+        <figure class="paths-video">
+          <video controls preload="none" playsinline poster="musonius-paths.jpg" width="1920" height="1080" aria-describedby="paths-video-caption">
+            <source src="musonius-paths.mp4" type="video/mp4">
+            <a href="musonius-paths.mp4">Watch: what becomes possible over time</a>.
+          </video>
+          <figcaption id="paths-video-caption"><strong>What becomes possible over time.</strong> On day one you sign every spend, with your cosigner or your inheritance keyholder. Only inactivity adds paths: after 3&ndash;6 months untouched, Owner Exit opens; after 9&ndash;15 months, Cosigner + Inheritance. Any spend restarts both waits and locks them again.</figcaption>
         </figure>
 
         <p class="timeline-followup"><a href="security.html#failure-modes">What happens when a key, or Musonius itself, fails? See the failure-mode table &rarr;</a></p>
