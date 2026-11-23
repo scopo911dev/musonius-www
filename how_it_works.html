@@ -134,6 +134,8 @@
       margin-bottom: 96px;
     }
     section:last-of-type { margin-bottom: 96px; }
+    /* A section followed directly by an illustration sits close to it. */
+    section:has(+ .diagram-figure) { margin-bottom: 32px; }
 
     section h2 {
       font-family: var(--font-serif);
