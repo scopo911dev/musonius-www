@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<!--
+  Musonius /recovery_guide (2026-11-25): PLACEHOLDER. Scott asked for a page the
+  app's recovery screen can link to ("Outside Musonius"). For now it carries the
+  same six Liana steps as the Backup Kit PDF (checked against Liana v16.0 on
+  2026-11-22). The full guide, with screenshots (TBA_Vault
+  docs/liana_recovery_screenshots/), replaces it later.
+  Voice discipline (site standard): no em-dashes, active voice, plain language.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Recovering with Liana. Musonius Multisig Vault</title>
+  <meta name="description" content="How to spend your Musonius vault without Musonius, using your Backup Kit and Liana, a free open-source wallet.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- Tokens ---------- */
+    :root {
+      --paper:        #F4EFE6;
+      --paper-deep:   #ECE5D8;
+      --ink:          #1A1714;
+      --ink-soft:     #4A443D;
+      --ink-mute:     #8A8276;
+      --rule:         #D9D1C0;
+      --oxblood:      #6B1F1A;
+      --oxblood-deep: #4A1612;
+      --font-serif:   'Cormorant Garamond', Georgia, serif;
+      --font-sans:    'Inter', system-ui, sans-serif;
+    }
+
+    /* ---------- Reset ---------- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+    /* ---------- Page ---------- */
+    body {
+      font-family: var(--font-sans);
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* ---------- Lockup ---------- */
+    header {
+      padding: 32px 48px;
+      display: flex;
+      justify-content: flex-start;
+    }
+    .lockup {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .lockup-mark { height: 26px; width: auto; flex-shrink: 0; }
+    .lockup-wordmark {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 32px;
+      letter-spacing: -0.012em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .lockup-rule {
+      width: 1px; height: 18px;
+      background: var(--rule);
+      margin: 0 6px;
+      align-self: center;
+    }
+    .lockup-tag {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--ink-mute);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ---------- Main ---------- */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 48px 96px;
+    }
+
+    .content {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    /* ---------- Page heading ---------- */
+    h1.page-title {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 56px;
+      letter-spacing: -0.018em;
+      line-height: 1.10;
+      color: var(--ink);
+      margin-bottom: 32px;
+    }
+    p.standfirst {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 24px;
+      line-height: 1.45;
+      color: var(--ink-soft);
+      margin-bottom: 56px;
+    }
+
+    /* ---------- Author figure (full-width hero, matches /origin) ---------- */
+    .author-figure {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin: 0 0 96px;
+    }
+
+    /* ---------- Section ---------- */
+    section {
+      margin-bottom: 96px;
+    }
+    section:last-of-type { margin-bottom: 96px; }
+
+    section .eyebrow {
+      display: block;
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      margin-bottom: 16px;
+    }
+
+    section h2 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 40px;
+      letter-spacing: -0.012em;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 32px;
+    }
+
+    section h3 {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 28px;
+      letter-spacing: -0.012em;
+      line-height: 1.20;
+      color: var(--ink);
+      margin-top: 48px;
+      margin-bottom: 20px;
+    }
+
+    section p {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+    section ul, section ol {
+      margin: 0 0 24px 1.4em;
+      padding: 0;
+    }
+    section ul li, section ol li {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--ink);
+      margin-bottom: 10px;
+      padding-left: 4px;
+    }
+    section p.secondary {
+      color: var(--ink-soft);
+    }
+    section p:last-child {
+      margin-bottom: 0;
+    }
+
+    section strong {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 24px 0;
+    }
+    section ul li {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--ink);
+      padding-left: 28px;
+      position: relative;
+      margin-bottom: 16px;
+    }
+    section ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.75em;
+      width: 12px;
+      height: 1px;
+      background: var(--ink-mute);
+    }
+    section ul li:last-child { margin-bottom: 0; }
+
+    section a.inline {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      transition: color 140ms ease;
+    }
+    section a.inline:hover,
+    section a.inline:focus-visible {
+      color: var(--oxblood);
+      outline: none;
+    }
+
+    /* ---------- Pull-quote (the principle itself) ---------- */
+    .principle {
+      margin: 8px 0 0;
+      padding: 32px 0 8px;
+      border-top: 1px solid var(--rule);
+    }
+    .principle blockquote {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 30px;
+      line-height: 1.35;
+      letter-spacing: -0.008em;
+      color: var(--ink);
+    }
+    .principle cite {
+      display: block;
+      font-family: var(--font-sans);
+      font-style: normal;
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      margin-top: 24px;
+    }
+
+    /* ---------- CTAs ---------- */
+    .closing {
+      margin-top: 96px;
+      padding-top: 64px;
+      border-top: 1px solid var(--rule);
+      text-align: center;
+    }
+    .closing p {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 24px;
+      color: var(--ink-soft);
+      margin-bottom: 40px;
+      line-height: 1.4;
+    }
+    .choices {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 18px;
+      padding: 16px 32px;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--ink);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition:
+        background-color 140ms ease,
+        color 140ms ease,
+        border-color 140ms ease,
+        transform 80ms ease;
+      min-width: 180px;
+      text-align: center;
+    }
+    .btn:hover,
+    .btn:focus-visible {
+      background: var(--oxblood);
+      color: var(--paper);
+      border-color: var(--oxblood);
+      outline: none;
+    }
+    .btn:active {
+      background: var(--oxblood-deep);
+      border-color: var(--oxblood-deep);
+      transform: translateY(1px);
+    }
+
+    /* ---------- Footer (rebuilt Session 144, STYLE_GUIDE s7) ---------- */
+    /* Was a single centred line linking Home and Contact only, while the site
+       had grown to nine pages reachable by guided flow alone. Now the three
+       columns s7 specifies, on paper-deep, with the small lockup bottom-left
+       and the copyright bottom-right. index.html deliberately KEEPS the old
+       centred one-liner: the homepage is a locked single-viewport surface with
+       no scroll, and a column footer would break it. */
+    footer {
+      background: var(--paper-deep);
+      padding: 64px 48px 32px;
+      font-family: var(--font-sans);
+    }
+    .footer-inner {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+    .footer-cols {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 48px;
+    }
+    .footer-cols h4 {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 1.3;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+    .footer-cols ul { list-style: none; padding: 0; margin: 0; }
+    .footer-cols li { margin-bottom: 12px; }
+    .footer-cols li:last-child { margin-bottom: 0; }
+    .footer-cols a {
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--ink-soft);
+      text-decoration: none;
+      transition: color 140ms ease;
+    }
+    .footer-cols a:hover,
+    .footer-cols a:focus-visible { color: var(--oxblood); outline: none; }
+    .footer-base {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 56px;
+      padding-top: 24px;
+      border-top: 1px solid var(--rule);
+    }
+    .footer-lockup {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink-mute);
+      text-decoration: none;
+      transition: color 140ms ease;
+    }
+    .footer-lockup:hover,
+    .footer-lockup:focus-visible { color: var(--oxblood); outline: none; }
+    .footer-lockup svg { height: 16px; width: auto; flex-shrink: 0; }
+    .footer-lockup span {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 1;
+    }
+    .footer-meta {
+      font-weight: 400;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      color: var(--ink-mute);
+      text-align: right;
+    }
+    .footer-dot { color: var(--rule); margin: 0 8px; display: inline-block; }
+
+    @media (max-width: 720px) {
+      footer { padding: 48px 24px 28px; }
+      .footer-cols { grid-template-columns: 1fr; gap: 36px; }
+      .footer-cols h4 { font-size: 17px; margin-bottom: 16px; }
+      .footer-base { margin-top: 40px; flex-direction: column; align-items: flex-start; }
+      .footer-meta { text-align: left; }
+    }
+
+    /* ---------- Mobile ---------- */
+    @media (max-width: 720px) {
+      header { padding: 24px; }
+      main { padding: 24px 24px 64px; }
+      h1.page-title { font-size: 40px; margin-bottom: 24px; }
+      p.standfirst { font-size: 20px; margin-bottom: 32px; }
+      section { margin-bottom: 80px; }
+      section h2 { font-size: 32px; margin-bottom: 24px; }
+      section h3 { font-size: 24px; margin-top: 40px; }
+      section p, section ul li, section ol li { font-size: 17px; line-height: 1.6; }
+      .principle blockquote { font-size: 24px; }
+      .author-figure { margin-bottom: 64px; }
+      .closing { margin-top: 64px; padding-top: 48px; }
+      .closing p { font-size: 20px; margin-bottom: 32px; }
+      .lockup-wordmark { font-size: 24px; }
+      .lockup-mark { height: 20px; }
+      .lockup-rule { height: 14px; margin: 0 4px; }
+      .lockup-tag { font-size: 10px; letter-spacing: 0.18em; }
+      .btn { font-size: 16px; padding: 14px 24px; min-width: 0; flex: 1 1 140px; }
+    }
+
+    @media (max-width: 380px) {
+      .lockup-tag { display: none; }
+      .lockup-rule { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a class="lockup" href="index.html" aria-label="Musonius Multisig Vault — home">
+      <svg class="lockup-mark" viewBox="0 0 52 46" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <rect x="0" y="2" width="52" height="11" fill="currentColor"/>
+        <rect x="9" y="13" width="6" height="33" fill="currentColor"/>
+        <rect x="37" y="13" width="6" height="33" fill="currentColor"/>
+      </svg>
+      <span class="lockup-wordmark">Musonius</span>
+      <span class="lockup-rule" aria-hidden="true"></span>
+      <span class="lockup-tag">Multisig Vault</span>
+    </a>
+  </header>
+
+  <main>
+    <article class="content">
+
+      <h1 class="page-title">Recovering with Liana.</h1>
+      <p class="standfirst">How to spend your vault without Musonius, using your Backup Kit and free software.</p>
+
+      <section>
+        <span class="eyebrow">Coming soon</span>
+        <h2>A full guide is on its way.</h2>
+        <p>We are writing a step-by-step walkthrough with screenshots. Until it is here, the steps below are the same ones printed in your Backup Kit, and they are enough to recover your vault.</p>
+      </section>
+
+      <section>
+        <span class="eyebrow">Before you start</span>
+        <h2>What you need.</h2>
+        <ul>
+          <li>Your Sovereignty Backup Kit: the PDF and the descriptor file.</li>
+          <li>The hardware devices for one of your vault&rsquo;s spending paths. Your Backup Kit lists them, and so does the Vault information page in the app.</li>
+          <li>A computer with Liana, a free, open-source desktop wallet, from <a class="inline" href="https://lianawallet.com/" target="_blank" rel="noopener noreferrer">lianawallet.com</a>.</li>
+        </ul>
+      </section>
+
+      <section>
+        <span class="eyebrow">The steps</span>
+        <h2>Six steps in Liana.</h2>
+        <ol>
+          <li>Open Liana and choose &ldquo;Add an existing Liana wallet&rdquo;.</li>
+          <li>Choose a backend: &ldquo;Use your own node&rdquo; (your own Bitcoin node or an Electrum server) or &ldquo;Use Liana Connect&rdquo; (Wizardsardine&rsquo;s hosted service).</li>
+          <li>On &ldquo;Import the wallet&rdquo;, choose &ldquo;Paste a descriptor&rdquo; and paste the descriptor from your kit exactly, including the parts in square brackets and the checksum after the #.</li>
+          <li>On &ldquo;Import seed phrase&rdquo;, choose Skip. Your keys are on hardware devices.</li>
+          <li>On &ldquo;Register descriptor&rdquo;, connect and unlock each BitBox02 or Jade, select it, and approve on the device&rsquo;s screen.</li>
+          <li>Finish setup. Liana shows your balance. To spend, connect the devices for one spending path and sign.</li>
+        </ol>
+        <p>Liana enforces the same rules as Musonius, because both read them from the same descriptor. A path with a waiting period can only be used once its wait is over.</p>
+      </section>
+
+    </article>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <nav class="footer-cols" aria-label="Footer">
+        <div>
+          <h4>The vault</h4>
+          <ul>
+            <li><a href="how_it_works.html">How it works</a></li>
+            <li><a href="shapes.html">Choosing your vault</a></li>
+            <li><a href="bitcoin_ira.html">Bitcoin IRAs</a></li>
+            <li><a href="faq.html">Questions</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>The thinking</h4>
+          <ul>
+            <li><a href="security.html">Security</a></li>
+            <li><a href="technical_stuff.html">Technical details</a></li>
+            <li><a href="kerckhoffs.html">Kerckhoffs&rsquo;s principle</a></li>
+            <li><a href="recovery_guide.html" aria-current="page">Recovering with Liana</a></li>
+            <li><a href="origin.html">Origin</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Musonius</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="https://testapp.musonius.io">Open the app</a></li>
+          </ul>
+        </div>
+      </nav>
+      <div class="footer-base">
+        <a class="footer-lockup" href="index.html" aria-label="Musonius Multisig Vault, home">
+          <svg viewBox="0 0 52 46" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><rect x="0" y="2" width="52" height="11" fill="currentColor"/><rect x="9" y="13" width="6" height="33" fill="currentColor"/><rect x="37" y="13" width="6" height="33" fill="currentColor"/></svg>
+          <span>Musonius</span>
+        </a>
+        <p class="footer-meta">Open source<span class="footer-dot" aria-hidden="true">&middot;</span>Built by Scott Porter</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
